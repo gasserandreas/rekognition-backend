@@ -1,1 +1,1 @@
-# aws-rekognition
+# aws-rekognition-backend
