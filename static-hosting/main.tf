@@ -22,11 +22,6 @@ module "s3_bucket_static_hosting" {
   root_domain_name = "${var.root_domain_name}"
 }
 
-# module "certificate" {
-#   source           = "./acm-certificate"
-#   root_domain_name = "${var.root_domain_name}"
-# }
-
 module "cloudfront" {
   source                     = "./cloudfront"
   root_domain_name           = "${var.root_domain_name}"

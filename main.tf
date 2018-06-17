@@ -34,3 +34,12 @@ module "static-hosting" {
   root_domain_name = "${var.root_domain_name}"
   hosted_zone_id   = "${var.hosted_zone_id}"
 }
+
+# 
+module "gateway" {
+  source = "./gateway"
+
+  app_region = "${var.app_region}"
+  account_id = "${var.account_id}"
+  app_name   = "${var.app_name}"
+}
