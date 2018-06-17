@@ -30,8 +30,3 @@ module "resource_image" {
   app_name      = "${var.app_name}"
   lambda_role   = "${var.lambda_role}"
 }
-
-# output "get_lambda_integration" {
-#   value = "${module.resource_image.get_lambda_integration}"
-# }
-

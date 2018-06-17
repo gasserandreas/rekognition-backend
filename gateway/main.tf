@@ -68,10 +68,6 @@ resource "aws_api_gateway_deployment" "prod" {
     "module.resource_user",
   ]
 
-  # "aws_api_gateway_integration.get_lambda_integration",
-  # "aws_api_gateway_integration.post_lambda_integration",
-  # "aws_api_gateway_integration.get_with_id_lambda_integration",
-
   rest_api_id = "${aws_api_gateway_rest_api.api.id}"
   stage_name  = "prod"
 }
