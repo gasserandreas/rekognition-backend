@@ -5,6 +5,7 @@ variable "api_domain_name" {}
 variable "api_version" {}
 variable "route53_zone_id" {}
 variable "certificate_arn" {}
+variable "dynamodb_table_name" {}
 
 # create api
 resource "aws_api_gateway_rest_api" "api" {
@@ -30,6 +31,8 @@ module "resource_user" {
   account_id    = "${var.account_id}"
   app_name      = "${var.app_name}"
   lambda_role   = "${aws_iam_role.lambda_role.arn}"
+
+  dynamodb_table_name = "${var.dynamodb_table_name}"
 }
 
 # lambda execution role
@@ -73,6 +76,31 @@ resource "aws_iam_role_policy" "lambda_cloudwatch_log_group" {
   name   = "cloudwatch-log-group"
   role   = "${aws_iam_role.lambda_role.name}"
   policy = "${data.aws_iam_policy_document.cloudwatch_log_group_lambda.json}"
+}
+
+# dynamo access log group
+data "aws_iam_policy_document" "dynamo_access" {
+  statement {
+    actions = [
+      "dynamodb:Query",
+      "dynamodb:Scan",
+      "dynamodb:GetItem",
+      "dynamodb:PutItem",
+      "dynamodb:UpdateItem",
+      "dynamodb:DeleteItem",
+    ]
+
+    resources = [
+      "arn:aws:dynamodb:*:*:*",
+    ]
+  }
+}
+
+# attach dynamo access to lambda role
+resource "aws_iam_role_policy" "dynamo_log_group_policy" {
+  name   = "dynamo-log-group"
+  role   = "${aws_iam_role.lambda_role.name}"
+  policy = "${data.aws_iam_policy_document.dynamo_access.json}"
 }
 
 # deploy api

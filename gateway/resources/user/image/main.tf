@@ -4,6 +4,7 @@ variable "app_region" {}
 variable "account_id" {}
 variable "app_name" {}
 variable "lambda_role" {}
+variable "dynamodb_table_name" {}
 
 # image resources for get (list), post, put and delete
 resource "aws_api_gateway_resource" "image" {
@@ -48,6 +49,8 @@ module "get_lambda" {
   gateway_method = "${aws_api_gateway_method.get.http_method}"
   gateway_name   = "${aws_api_gateway_method.get.http_method}"
   resource_path  = "${aws_api_gateway_resource.image.path}"
+
+  dynamodb_table_name = "${var.dynamodb_table_name}"
 }
 
 # get with id integration
@@ -79,6 +82,8 @@ module "get_with_id_lambda" {
   gateway_method = "${aws_api_gateway_method.get_with_id.http_method}"
   gateway_name   = "${aws_api_gateway_method.get_with_id.http_method}"
   resource_path  = "${aws_api_gateway_resource.imageId.path}"
+
+  dynamodb_table_name = "${var.dynamodb_table_name}"
 }
 
 # post integration
@@ -110,4 +115,6 @@ module "post_lambda" {
   gateway_method = "${aws_api_gateway_method.post.http_method}"
   gateway_name   = "${aws_api_gateway_method.post.http_method}"
   resource_path  = "${aws_api_gateway_resource.image.path}"
+
+  dynamodb_table_name = "${var.dynamodb_table_name}"
 }

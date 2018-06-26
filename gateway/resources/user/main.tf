@@ -4,6 +4,7 @@ variable "app_region" {}
 variable "account_id" {}
 variable "app_name" {}
 variable "lambda_role" {}
+variable "dynamodb_table_name" {}
 
 # user resources for get (list), post, put and delete
 resource "aws_api_gateway_resource" "user" {
@@ -29,4 +30,6 @@ module "resource_image" {
   account_id    = "${var.account_id}"
   app_name      = "${var.app_name}"
   lambda_role   = "${var.lambda_role}"
+
+  dynamodb_table_name = "${var.dynamodb_table_name}"
 }

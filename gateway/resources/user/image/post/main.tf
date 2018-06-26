@@ -6,6 +6,7 @@ variable "api" {}
 variable "gateway_method" {}
 variable "gateway_name" {}
 variable "resource_path" {}
+variable "dynamodb_table_name" {}
 
 resource "aws_lambda_function" "post_lambda" {
   filename         = "./gateway/resources/user/image/post/post.zip"
