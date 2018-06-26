@@ -38,7 +38,6 @@ module "static-hosting" {
   hosted_zone_id   = "${var.hosted_zone_id}"
 }
 
-# 
 module "gateway" {
   source = "./gateway"
 
@@ -49,4 +48,12 @@ module "gateway" {
   api_version     = "${var.api_version}"
   route53_zone_id = "${var.hosted_zone_id}"
   certificate_arn = "${module.certificate.arn_api}"
+}
+
+module "image-buckets" {
+  source = "./image-buckets"
+
+  app_region = "${var.app_region}"
+  account_id = "${var.account_id}"
+  app_name   = "${var.app_name}"
 }
