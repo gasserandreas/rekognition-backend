@@ -28,6 +28,22 @@ resource "aws_s3_bucket" "thumb_bucket" {
       ]
     },
   ]
+
+  # allow public access for this bucket
+  policy = <<POLICY
+{
+  "Version":"2012-10-17",
+  "Statement":[
+    {
+      "Sid":"AddPerm",
+      "Effect":"Allow",
+      "Principal": "*",
+      "Action":["s3:GetObject"],
+      "Resource":["arn:aws:s3:::${var.account_id}-${var.app_name}-thumb-bucket/*"]
+    }
+  ]
+}
+POLICY
 }
 
 output "bucket_arn" {
