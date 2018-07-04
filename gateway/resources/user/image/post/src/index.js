@@ -12,9 +12,14 @@ const validation = (value, type) => {
     return typeof value === type;
 }
 
+const getDateInSeconds = (date = new Date()) => {
+    const seconds = date.getTime() / 1000;
+    return ~~(seconds);
+}
+
 const generateTLL = (days) => {
     const add = 86400 * days; // 60s * 60m * 24h
-    const seconds = (new Date().getTime()) / 1000 // get as seconds
+    const seconds = getDateInSeconds();
     return ~~(seconds + add); // remove float pointer
 }
 
@@ -28,7 +33,6 @@ exports.handler = function (event, context, callback) {
     console.log(data);
 
     if (!data
-        || !validation(data.userId, 'string')
         || !validation(data.filename, 'string')
         || !validation(data.imageId, 'string')) {
         console.error('Validation Failed');
@@ -42,14 +46,17 @@ exports.handler = function (event, context, callback) {
         });
     }
 
+    const { userId } = event.pathParameters;
+
     const params = {
         TableName: process.env.DYNAMODB_TABLE_NAME,
         Item: {
-          imageId: data.imageId,
-          userId: data.userId,
-          value: data.filename,
-        //   TimeToExist: generateTLL(30),
-          TimeToExist: generateTLL(1),
+            userId,
+            imageId: data.imageId,
+            value: data.filename,
+            created: getDateInSeconds(),
+            TimeToExist: generateTLL(30),
+        //   TimeToExist: generateTLL(1),
         },
     };
 
@@ -75,24 +82,3 @@ exports.handler = function (event, context, callback) {
         callback(null, response);
     });
 };
-
-
-// exports.handler = function (event, context, callback) {
-//     console.log(event);
-//     console.log(context);
-
-//     const message = {
-//         event,
-//         context,
-//     };
-
-//     var response = {
-//         statusCode: 200,
-//         headers: {
-//             'Content-Type': 'text/html; charset=utf-8',
-//         },
-//         body: "<p>" + JSON.stringify(message) + "</p>",
-//         // body: "<p>Hello world from get</p>" + "<code>" + JSON.stringify(event) + "<br /> " + JSON.stringify(context) + "</code>",
-//     };
-//     callback(null, response);
-// };

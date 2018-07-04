@@ -6,12 +6,18 @@ const dynamoDb = new AWS.DynamoDB.DocumentClient();
 
 exports.handler = function (event, context, callback) {
     console.log(event);
-    console.log(event.pathParameters);
+
+    // get path parameters
+    const {
+        imageId,
+        userId,
+    } = event.pathParameters;
+
     const params = {
         TableName: process.env.DYNAMODB_TABLE_NAME,
         Key: {
-            imageId: event.pathParameters.imageId,
-            userId: event.pathParameters.userId,
+            imageId,
+            userId,
         },
     };
 
@@ -26,7 +32,7 @@ exports.handler = function (event, context, callback) {
                     'Content-Type': 'text/plain',
                     'Access-Control-Allow-Origin': event.headers.origin
                 },
-                body: 'Couldn\'t fetch the sample item.',
+                body: 'Couldn\'t fetch the image item.',
             });
             return;
         }

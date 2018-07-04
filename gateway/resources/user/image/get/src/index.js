@@ -9,6 +9,9 @@ exports.handler = function (event, context, callback) {
         context,
     };
 
+    console.log(event);
+    console.log(event.pathParameters);
+
     var response = {
         statusCode: 200,
         headers: {
