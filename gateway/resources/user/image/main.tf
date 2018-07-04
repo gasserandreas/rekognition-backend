@@ -4,6 +4,7 @@ variable "app_region" {}
 variable "account_id" {}
 variable "app_name" {}
 variable "lambda_role" {}
+variable "dynamodb_table_name" {}
 
 # image resources for get (list), post, put and delete
 resource "aws_api_gateway_resource" "image" {
@@ -25,6 +26,11 @@ resource "aws_api_gateway_method" "get" {
   resource_id   = "${aws_api_gateway_resource.image.id}"
   http_method   = "GET"
   authorization = "NONE"
+
+  request_parameters {
+    "method.request.path.imageId" = true
+    "method.request.path.userId"  = true
+  }
 }
 
 resource "aws_api_gateway_integration" "get" {
@@ -34,6 +40,11 @@ resource "aws_api_gateway_integration" "get" {
   integration_http_method = "POST"
   type                    = "AWS_PROXY"
   uri                     = "arn:aws:apigateway:${var.app_region}:lambda:path/2015-03-31/functions/${module.get_lambda.arn}/invocations"
+
+  request_parameters {
+    "integration.request.path.imageId" = "method.request.path.imageId"
+    "integration.request.path.userId"  = "method.request.path.userId"
+  }
 }
 
 # get lambda
@@ -48,6 +59,8 @@ module "get_lambda" {
   gateway_method = "${aws_api_gateway_method.get.http_method}"
   gateway_name   = "${aws_api_gateway_method.get.http_method}"
   resource_path  = "${aws_api_gateway_resource.image.path}"
+
+  dynamodb_table_name = "${var.dynamodb_table_name}"
 }
 
 # get with id integration
@@ -56,6 +69,11 @@ resource "aws_api_gateway_method" "get_with_id" {
   resource_id   = "${aws_api_gateway_resource.imageId.id}"
   http_method   = "GET"
   authorization = "NONE"
+
+  request_parameters {
+    "method.request.path.imageId" = true
+    "method.request.path.userId"  = true
+  }
 }
 
 resource "aws_api_gateway_integration" "get_with_id" {
@@ -65,6 +83,11 @@ resource "aws_api_gateway_integration" "get_with_id" {
   integration_http_method = "POST"
   type                    = "AWS_PROXY"
   uri                     = "arn:aws:apigateway:${var.app_region}:lambda:path/2015-03-31/functions/${module.get_with_id_lambda.arn}/invocations"
+
+  request_parameters {
+    "integration.request.path.imageId" = "method.request.path.imageId"
+    "integration.request.path.userId"  = "method.request.path.userId"
+  }
 }
 
 # get with id lambda
@@ -79,6 +102,8 @@ module "get_with_id_lambda" {
   gateway_method = "${aws_api_gateway_method.get_with_id.http_method}"
   gateway_name   = "${aws_api_gateway_method.get_with_id.http_method}"
   resource_path  = "${aws_api_gateway_resource.imageId.path}"
+
+  dynamodb_table_name = "${var.dynamodb_table_name}"
 }
 
 # post integration
@@ -87,6 +112,11 @@ resource "aws_api_gateway_method" "post" {
   resource_id   = "${aws_api_gateway_resource.image.id}"
   http_method   = "POST"
   authorization = "NONE"
+
+  request_parameters {
+    "method.request.path.imageId" = true
+    "method.request.path.userId"  = true
+  }
 }
 
 resource "aws_api_gateway_integration" "post" {
@@ -96,6 +126,11 @@ resource "aws_api_gateway_integration" "post" {
   integration_http_method = "POST"
   type                    = "AWS_PROXY"
   uri                     = "arn:aws:apigateway:${var.app_region}:lambda:path/2015-03-31/functions/${module.post_lambda.arn}/invocations"
+
+  request_parameters {
+    "integration.request.path.imageId" = "method.request.path.imageId"
+    "integration.request.path.userId"  = "method.request.path.userId"
+  }
 }
 
 # post lambda
@@ -110,4 +145,6 @@ module "post_lambda" {
   gateway_method = "${aws_api_gateway_method.post.http_method}"
   gateway_name   = "${aws_api_gateway_method.post.http_method}"
   resource_path  = "${aws_api_gateway_resource.image.path}"
+
+  dynamodb_table_name = "${var.dynamodb_table_name}"
 }

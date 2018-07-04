@@ -6,6 +6,7 @@ variable "api" {}
 variable "gateway_method" {}
 variable "gateway_name" {}
 variable "resource_path" {}
+variable "dynamodb_table_name" {}
 
 resource "aws_lambda_function" "get_lambda" {
   filename         = "./gateway/resources/user/image/get/get.zip"
@@ -14,6 +15,13 @@ resource "aws_lambda_function" "get_lambda" {
   handler          = "index.handler"
   runtime          = "nodejs6.10"
   source_code_hash = "${base64sha256(file("./gateway/resources/user/image/get/get.zip"))}"
+
+  # define lambda env vars
+  environment {
+    variables {
+      DYNAMODB_TABLE_NAME = "${var.dynamodb_table_name}"
+    }
+  }
 }
 
 resource "aws_lambda_permission" "apigw_lambda" {
