@@ -29,6 +29,14 @@ resource "aws_s3_bucket" "thumb_bucket" {
     },
   ]
 
+  cors_rule = {
+    allowed_headers = ["*"]
+    allowed_methods = ["GET"]
+    allowed_origins = ["*", "http://*", "https://*"]
+    expose_headers  = ["ETag"]
+    max_age_seconds = 3000
+  }
+
   # allow public access for this bucket
   policy = <<POLICY
 {
