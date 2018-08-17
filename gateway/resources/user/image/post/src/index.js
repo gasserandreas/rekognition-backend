@@ -24,11 +24,6 @@ const generateTLL = (days) => {
 }
 
 exports.handler = function (event, context, callback) {
-    const message = {
-        event,
-        context,
-    };
-
     const data = JSON.parse(event.body);
     console.log(data);
 
@@ -39,7 +34,9 @@ exports.handler = function (event, context, callback) {
         callback(null, {
             statusCode: 400,
             headers: {
-                'Content-Type': 'text/plain',
+                // 'Content-Type': 'text/plain',
+                'Content-Type': 'application/json',
+                // 'Access-Control-Allow-Origin': '*'
                 'Access-Control-Allow-Origin': event.headers.origin,
             },
             body: 'Couldn\'t create the image item.',
@@ -67,7 +64,12 @@ exports.handler = function (event, context, callback) {
         console.error(error);
         callback(null, {
             statusCode: error.statusCode || 501,
-            headers: { 'Content-Type': 'text/plain', 'Access-Control-Allow-Origin': event.headers.origin },
+            headers: {
+                // 'Content-Type': 'text/plain',
+                'Content-Type': 'application/json',
+                // 'Access-Control-Allow-Origin': '*'
+                'Access-Control-Allow-Origin': event.headers.origin
+            },
             body: 'Couldn\'t create the image item.',
         });
         return;
@@ -76,8 +78,13 @@ exports.handler = function (event, context, callback) {
         // create a response
         const response = {
         statusCode: 200,
-        body: JSON.stringify(params.Item),
-        headers: { 'Access-Control-Allow-Origin': event.headers.origin },
+            body: JSON.stringify(params.Item),
+            headers: {
+                // 'Content-Type': 'text/json',
+                'Content-Type': 'application/json',
+                // 'Access-Control-Allow-Origin': '*',
+                'Access-Control-Allow-Origin': event.headers.origin
+            },
         };
         callback(null, response);
     });

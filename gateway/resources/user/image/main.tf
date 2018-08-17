@@ -13,11 +13,118 @@ resource "aws_api_gateway_resource" "image" {
   rest_api_id = "${var.rest_api_id}"
 }
 
+# options configuration for image
+resource "aws_api_gateway_method" "options_method_image" {
+  rest_api_id   = "${var.rest_api_id}"
+  resource_id   = "${aws_api_gateway_resource.image.id}"
+  http_method   = "OPTIONS"
+  authorization = "NONE"
+}
+
+resource "aws_api_gateway_method_response" "options_200_image" {
+  rest_api_id = "${var.rest_api_id}"
+  resource_id = "${aws_api_gateway_resource.image.id}"
+  http_method = "${aws_api_gateway_method.options_method_image.http_method}"
+  status_code = "200"
+
+  response_models {
+    "application/json" = "Empty"
+  }
+
+  response_parameters {
+    "method.response.header.Access-Control-Allow-Headers" = true
+    "method.response.header.Access-Control-Allow-Methods" = true
+    "method.response.header.Access-Control-Allow-Origin"  = true
+  }
+
+  depends_on = ["aws_api_gateway_method.options_method_image"]
+}
+
+resource "aws_api_gateway_integration" "options_integration_image" {
+  rest_api_id = "${var.rest_api_id}"
+  resource_id = "${aws_api_gateway_resource.image.id}"
+  http_method = "${aws_api_gateway_method.options_method_image.http_method}"
+  type        = "MOCK"
+  depends_on  = ["aws_api_gateway_method.options_method_image"]
+
+  request_templates = {
+    "application/json" = "{\"statusCode\": 200}"
+  }
+}
+
+resource "aws_api_gateway_integration_response" "options_integration_response_image" {
+  rest_api_id = "${var.rest_api_id}"
+  resource_id = "${aws_api_gateway_resource.image.id}"
+  http_method = "${aws_api_gateway_method.options_method_image.http_method}"
+  status_code = "${aws_api_gateway_method_response.options_200_image.status_code}"
+
+  response_parameters = {
+    "method.response.header.Access-Control-Allow-Headers" = "'Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token'"
+    "method.response.header.Access-Control-Allow-Methods" = "'POST,GET,OPTIONS'"
+    "method.response.header.Access-Control-Allow-Origin"  = "'*'"
+  }
+
+  depends_on = ["aws_api_gateway_method_response.options_200_image"]
+}
+
 # image get resource with id only
 resource "aws_api_gateway_resource" "imageId" {
   path_part   = "{imageId}"
   parent_id   = "${aws_api_gateway_resource.image.id}"
   rest_api_id = "${var.rest_api_id}"
+}
+
+# options configuration for imageId
+resource "aws_api_gateway_method" "options_method_image_id" {
+  rest_api_id   = "${var.rest_api_id}"
+  resource_id   = "${aws_api_gateway_resource.imageId.id}"
+  http_method   = "OPTIONS"
+  authorization = "NONE"
+}
+
+resource "aws_api_gateway_method_response" "options_200_image_id" {
+  rest_api_id = "${var.rest_api_id}"
+  resource_id = "${aws_api_gateway_resource.imageId.id}"
+  http_method = "${aws_api_gateway_method.options_method_image_id.http_method}"
+  status_code = "200"
+
+  response_models {
+    "application/json" = "Empty"
+  }
+
+  response_parameters {
+    "method.response.header.Access-Control-Allow-Headers" = true
+    "method.response.header.Access-Control-Allow-Methods" = true
+    "method.response.header.Access-Control-Allow-Origin"  = true
+  }
+
+  depends_on = ["aws_api_gateway_method.options_method_image_id"]
+}
+
+resource "aws_api_gateway_integration" "options_integration_image_id" {
+  rest_api_id = "${var.rest_api_id}"
+  resource_id = "${aws_api_gateway_resource.imageId.id}"
+  http_method = "${aws_api_gateway_method.options_method_image_id.http_method}"
+  type        = "MOCK"
+  depends_on  = ["aws_api_gateway_method.options_method_image_id"]
+  request_templates = {
+    "application/json" = "{\"statusCode\": 200}"
+  }
+}
+
+resource "aws_api_gateway_integration_response" "options_integration_response_image_id" {
+  rest_api_id = "${var.rest_api_id}"
+  resource_id = "${aws_api_gateway_resource.imageId.id}"
+  http_method = "${aws_api_gateway_method.options_method_image_id.http_method}"
+  status_code = "${aws_api_gateway_method_response.options_200_image_id.status_code}"
+
+  response_parameters = {
+    "method.response.header.Access-Control-Allow-Headers" = "'Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token'"
+    "method.response.header.Access-Control-Allow-Methods" = "'GET,OPTIONS,POST,PUT'"
+    "method.response.header.Access-Control-Allow-Origin"  = "'*'"
+  }
+
+  depends_on = ["aws_api_gateway_method_response.options_200_image_id"]
 }
 
 # get integration
@@ -117,6 +224,17 @@ resource "aws_api_gateway_method" "post" {
     "method.request.path.imageId" = true
     "method.request.path.userId"  = true
   }
+}
+
+resource "aws_api_gateway_method_response" "post_response_200" {
+  rest_api_id           = "${var.rest_api_id}"
+  resource_id           = "${aws_api_gateway_resource.image.id}"
+  http_method           = "${aws_api_gateway_method.post.http_method}"
+  status_code           = "200"
+  response_parameters = {
+      "method.response.header.Access-Control-Allow-Origin" = true
+  }
+  depends_on            = ["aws_api_gateway_method.post", "aws_api_gateway_integration.post"]
 }
 
 resource "aws_api_gateway_integration" "post" {
