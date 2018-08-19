@@ -34,9 +34,7 @@ exports.handler = function (event, context, callback) {
         callback(null, {
             statusCode: 400,
             headers: {
-                // 'Content-Type': 'text/plain',
                 'Content-Type': 'application/json',
-                // 'Access-Control-Allow-Origin': '*'
                 'Access-Control-Allow-Origin': event.headers.origin,
             },
             body: 'Couldn\'t create the image item.',
@@ -49,11 +47,12 @@ exports.handler = function (event, context, callback) {
         TableName: process.env.DYNAMODB_TABLE_NAME,
         Item: {
             userId,
+            labels: data.labels || [],
+            faces: data.faces || [],
             imageId: data.imageId,
             value: data.filename,
             created: getDateInSeconds(),
             TimeToExist: generateTLL(30),
-        //   TimeToExist: generateTLL(1),
         },
     };
 
@@ -65,9 +64,7 @@ exports.handler = function (event, context, callback) {
         callback(null, {
             statusCode: error.statusCode || 501,
             headers: {
-                // 'Content-Type': 'text/plain',
                 'Content-Type': 'application/json',
-                // 'Access-Control-Allow-Origin': '*'
                 'Access-Control-Allow-Origin': event.headers.origin
             },
             body: 'Couldn\'t create the image item.',
@@ -80,9 +77,7 @@ exports.handler = function (event, context, callback) {
         statusCode: 200,
             body: JSON.stringify(params.Item),
             headers: {
-                // 'Content-Type': 'text/json',
                 'Content-Type': 'application/json',
-                // 'Access-Control-Allow-Origin': '*',
                 'Access-Control-Allow-Origin': event.headers.origin
             },
         };
