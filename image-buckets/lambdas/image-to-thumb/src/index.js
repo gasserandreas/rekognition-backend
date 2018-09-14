@@ -7,8 +7,8 @@ var gm = require('gm').subClass({ imageMagick: true }); // Enable ImageMagick in
 var util = require('util');
 
 // constants
-var MAX_WIDTH  = 250;
-var MAX_HEIGHT = 250;
+var MAX_WIDTH  = 1000;
+var MAX_HEIGHT = 1000;
 
 const S3 = new AWS.S3({
     signatureVersion: 'v4',
@@ -34,7 +34,7 @@ exports.handler = function (event, context, callback) {
     }
     
     const imageType = typeMatch[1];
-	if (imageType != "jpg" && imageType != "png") {
+	if (imageType !== "jpg" && imageType !== "png" && imageType !== 'jpeg') {
 		console.log('skipping non-image ' + originalKey);
 		return;
     }
