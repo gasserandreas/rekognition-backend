@@ -12,7 +12,8 @@ resource "aws_lambda_function" "s3_transfer_function" {
   handler          = "index.handler"
   runtime          = "nodejs8.10"
   source_code_hash = "${base64sha256(file("./image-buckets/lambdas/image-to-thumb/image-to-thumb.zip"))}"
-  timeout          = 10
+  timeout          = 45
+  memory_size      = 512
 
   # define lambda env vars
   environment {
