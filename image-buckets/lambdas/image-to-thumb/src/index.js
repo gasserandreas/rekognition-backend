@@ -4,6 +4,7 @@
 var async = require('async');
 var AWS = require('aws-sdk');
 var gm = require('gm').subClass({ imageMagick: true }); // Enable ImageMagick integration.
+var jo = require('jpeg-autorotate');
 var util = require('util');
 
 // constants
@@ -14,6 +15,23 @@ const S3 = new AWS.S3({
     signatureVersion: 'v4',
 });
 
+// Rotate an image given a buffer
+var autorotateImage = function(data, callback) {
+    jo.rotate(data, {}, function(error, buffer, orientation) {
+        if (!error) {
+            console.log('Orientation was: ' + orientation);
+            callback(null, buffer);
+        } else if (error.code === 'no_orientation' || error.code === 'correct_orientation') {
+            console.log('no rotation needed');
+            callback(null, buffer);
+        } else {
+            console.log(error);
+            console.log(JSON.stringify(error));
+            console.log('An error occurred when rotating the file: ' + error.message);
+            callback(error, null);
+        }
+    });
+  };
 
 exports.handler = function (event, context, callback) {
     const data = event.Records[0];
@@ -48,9 +66,25 @@ exports.handler = function (event, context, callback) {
                 Key: originalKey
             }, next);
         },
-        // transform image
         (response, next) => {
-            gm(response.Body).size(function(error, size) {
+            autorotateImage(response.Body, function(error, image) {
+                if (error) {
+                    console.log(error);
+                    next('Error rotating image: ' + error);
+                } else {
+                    next(null, {
+                        image: image,
+                        response: response,
+                    });
+                }
+            });
+        },
+        (params, next) => {
+            const image = params.image;
+            const response = params.response;
+            console.log('start transformation');
+            gm(image).size(function(error, size) {
+                console.log('loaded image');
 				// Infer the scaling factor to avoid stretching the image unnaturally.
 				const scalingFactor = Math.min(
 					MAX_WIDTH / size.width,
@@ -92,8 +126,6 @@ exports.handler = function (event, context, callback) {
             message = 'Successfully resized ' + originalBucket + '/' + originalKey + 
             ' and uploaded to ' + newBucket + '/' + newKey;
         }
-
-        console.log(message);
 
         context.done(error, message);
     });
