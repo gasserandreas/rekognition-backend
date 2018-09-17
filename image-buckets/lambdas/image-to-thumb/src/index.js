@@ -127,6 +127,8 @@ exports.handler = function (event, context, callback) {
             ' and uploaded to ' + newBucket + '/' + newKey;
         }
 
+        console.log(message);
+
         context.done(error, message);
     });
 };
