@@ -1,0 +1,17 @@
+{
+  "name": "create-thumbnails-lambda",
+  "version": "1.0.0",
+  "description": "Create thumbnail images from new stored image in bucket a and store it in bucket b",
+  "main": "index.js",
+  "author": "Andreas Gasser",
+  "license": "MIT",
+  "private": false,
+  "dependencies": {
+    "async": "^2.6.1",
+    "gm": "^1.23.1",
+    "jpeg-autorotate": "^4.0.0"
+  },
+  "devDependencies": {
+    "aws-sdk": "^2.247.1"
+  }
+}
