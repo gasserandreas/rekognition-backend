@@ -52,7 +52,7 @@ exports.handler = function (event, context, callback) {
             imageId: data.imageId,
             value: data.filename,
             created: getDateInSeconds(),
-            TimeToExist: generateTLL(30),
+            TimeToExist: generateTLL(180),
         },
     };
 
