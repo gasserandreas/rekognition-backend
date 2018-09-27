@@ -1,0 +1,20 @@
+{
+  "name": "rekognition-backend",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "release-prod": "terraform workspace select default && terraform apply -var-file=\"terraform.prod.tfvars\"",
+    "release-test": "terraform workspace select test && terraform apply -var-file=\"terraform.tfvars\""
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/gasserandreas/rekognition-backend.git"
+  },
+  "author": "Andreas Gasser",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/gasserandreas/rekognition-backend/issues"
+  },
+  "homepage": "https://github.com/gasserandreas/rekognition-backend#readme"
+}

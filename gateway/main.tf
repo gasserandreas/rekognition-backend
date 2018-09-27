@@ -3,6 +3,7 @@ variable "account_id" {}
 variable "app_name" {}
 variable "api_domain_name" {}
 variable "api_version" {}
+variable "api_stage" {}
 variable "route53_zone_id" {}
 variable "certificate_arn" {}
 variable "dynamodb_table_name" {}
@@ -73,7 +74,7 @@ data "aws_iam_policy_document" "cloudwatch_log_group_lambda" {
 
 # attach cloudwatch log group to lambda role
 resource "aws_iam_role_policy" "lambda_cloudwatch_log_group" {
-  name   = "cloudwatch-log-group"
+  name   = "${var.app_name}_cloudwatch-log-group"
   role   = "${aws_iam_role.lambda_role.name}"
   policy = "${data.aws_iam_policy_document.cloudwatch_log_group_lambda.json}"
 }
@@ -98,30 +99,30 @@ data "aws_iam_policy_document" "dynamo_access" {
 
 # attach dynamo access to lambda role
 resource "aws_iam_role_policy" "dynamo_log_group_policy" {
-  name   = "dynamo-log-group"
+  name   = "${var.app_name}_dynamo-log-group"
   role   = "${aws_iam_role.lambda_role.name}"
   policy = "${data.aws_iam_policy_document.dynamo_access.json}"
 }
 
 # deploy api
-resource "aws_api_gateway_deployment" "prod" {
+resource "aws_api_gateway_deployment" "deployment" {
   depends_on = [
     "module.resource_user",
   ]
 
   rest_api_id = "${aws_api_gateway_rest_api.api.id}"
-  stage_name  = "prod"
+  stage_name  = "${var.api_stage}"
 }
 
 # base mapping
-resource "aws_api_gateway_base_path_mapping" "prod" {
+resource "aws_api_gateway_base_path_mapping" "path_mapping" {
   api_id      = "${aws_api_gateway_rest_api.api.id}"
-  stage_name  = "${aws_api_gateway_deployment.prod.stage_name}"
+  stage_name  = "${aws_api_gateway_deployment.deployment.stage_name}"
   domain_name = "${var.api_domain_name}"
   base_path   = "${var.api_version}"
 }
 
 # output api
 output "invoke_url" {
-  value = "${aws_api_gateway_deployment.prod.invoke_url}"
+  value = "${aws_api_gateway_deployment.deployment.invoke_url}"
 }
