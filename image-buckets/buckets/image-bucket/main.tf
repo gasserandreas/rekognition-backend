@@ -13,17 +13,17 @@ resource "aws_s3_bucket" "image_bucket" {
   lifecycle_rule = [
     {
       enabled = true
-      id      = "retire exports after 30 days"
+      id      = "retire exports after 180 days"
 
       noncurrent_version_expiration = [
         {
-          days = 30
+          days = 180
         },
       ]
 
       expiration = [
         {
-          days = 30
+          days = 180
         },
       ]
     },
