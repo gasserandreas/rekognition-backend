@@ -5,6 +5,8 @@ variable "app_name" {}
 variable "hosted_zone_id" {}
 variable "api_domain_name" {}
 variable "api_version" {}
+variable "api_stage" {}
+
 
 # provider
 provider "aws" {
@@ -24,6 +26,7 @@ module "gateway" {
   app_name        = "${var.app_name}"
   api_domain_name = "${var.api_domain_name}"
   api_version     = "${var.api_version}"
+  api_stage       = "${var.api_stage}"
   route53_zone_id = "${var.hosted_zone_id}"
   certificate_arn = "${module.certificate.arn_api}"
 

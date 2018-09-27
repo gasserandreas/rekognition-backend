@@ -22,7 +22,7 @@ module "thumb_bucket" {
 
 # IAM role for aws
 resource "aws_iam_role" "iam_for_lambda" {
-  name = "iam_for_lambda"
+  name = "${var.app_name}_iam_for_lambda"
 
   assume_role_policy = <<EOF
 {
@@ -57,7 +57,7 @@ data "aws_iam_policy_document" "cloudwatch_log_group_lambda" {
 
 # attach cloudwatch log group to lambda role
 resource "aws_iam_role_policy" "transfer_lambda_cloudwatch_log_group" {
-  name   = "cloudwatch-log-group"
+  name   = "${var.app_name}_cloudwatch-log-group"
   role   = "${aws_iam_role.iam_for_lambda.name}"
   policy = "${data.aws_iam_policy_document.cloudwatch_log_group_lambda.json}"
 }
@@ -77,7 +77,7 @@ data "aws_iam_policy_document" "s3_acccess_image_bucket" {
 
 # attach s3 policy to role for bucket: image-bucket
 resource "aws_iam_role_policy" "lambda_s3_access_image_bucket" {
-  name   = "lambda_s3_image_bucket_access_thumb_bucket"
+  name   = "${var.app_name}_lambda_s3_image_bucket_access_thumb_bucket"
   role   = "${aws_iam_role.iam_for_lambda.name}"
   policy = "${data.aws_iam_policy_document.s3_acccess_image_bucket.json}"
 }
@@ -98,7 +98,7 @@ data "aws_iam_policy_document" "s3_acccess_thumb_bucket" {
 
 # attach s3 policy to role for bucket: bucket-a
 resource "aws_iam_role_policy" "lambda_s3_access_thumb_bucket" {
-  name   = "lambda_s3_bucket_access_thumb_bucket"
+  name   = "${var.app_name}_lambda_s3_bucket_access_thumb_bucket"
   role   = "${aws_iam_role.iam_for_lambda.name}"
   policy = "${data.aws_iam_policy_document.s3_acccess_thumb_bucket.json}"
 }
