@@ -1,11 +1,11 @@
 import generateTypeDefs from './typeDefs';
 import dotenv from 'dotenv';
 
-import MutationResolver from './resolvers/Mutation';
-import QueryResolver from './resolvers/Query';
-
 import UserModel from './models/User';
-import TodoModel from './models/Todo';
+import ImageModel from './models/Image';
+import FaceModel from './models/Face';
+
+import resolvers from './resolvers';
 
 import DynamoFactory, { generateDynamoTables } from './dynamo';
 
@@ -31,10 +31,11 @@ const dynamoConfig = {
 };
 
 // configure resolvers and graphql server
-const resolvers = {
-  Query: QueryResolver,
-  Mutation: MutationResolver,
-};
+// const resolvers = {
+//   Query: QueryResolver,
+//   Mutation: MutationResolver,
+//   Image: ImageResolver,
+// };
 
 export const generateServer = (Server, gql, local = false) => new Server({
   typeDefs: generateTypeDefs(gql),
@@ -61,7 +62,8 @@ export const generateServer = (Server, gql, local = false) => new Server({
     
     const models = {
       User: new UserModel({ DynamoClient, auth }),
-      Todo: new TodoModel({ DynamoClient, auth }),
+      Face: new FaceModel({ DynamoClient, auth }),
+      Image: new ImageModel({ DynamoClient, auth }),
     };
 
     return {

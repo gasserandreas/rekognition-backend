@@ -2,18 +2,42 @@
 const generateTypeDefs = gql => gql`
   type Query {
     now: String
-    listTodo(limit: Int, nextToken: String): TodoConnection!
-    getUserInfo(userId: ID!): User
+    getUserInfo(user_id: ID!): User
+    getImage(image_id: ID!): Image
+    listImage(limit: Int, nextToken: String): ImageConnection!
   }
 
   type Mutation {
-    createTodo(input: CreateTodoInput!): CreateTodoPayload
-    toggleTodoCompleted(input: ToggleTodoCompletedInput!): ToggleTodoCompletedPayload
-    updateTodoText(input: UpdateTodoTextInput!): UpdateTodoTextPayload
     signUpUser(input: SignUpUserInput!): UserAuthPayload
     loginUser(input: LoginUserInput!): UserAuthPayload
+    addImage(input: AddImageInput!): AddImagePayload
+    addFaces(input: AddFacesInput!): AddFacesPayload
   }
 
+  # mutation input definitions
+  input AddFacesInput {
+    faces: [FaceInput]!
+  }
+
+  # mutation payloads
+  type UserAuthPayload {
+    user: User!
+    token: String!
+  }
+
+  type AddImagePayload {
+    image: Image
+  }
+
+  type AddFacesPayload {
+    faces: [Face]!
+  }
+
+  # --------------------
+  # - type definitions -
+  # --------------------
+
+  # user definitions
   type User {
     id: ID!
     firstname: String!
@@ -34,49 +58,79 @@ const generateTypeDefs = gql => gql`
     password: String!
   }
 
-  type UserAuthPayload {
-    user: User!
-    token: String!
+  # image definitions
+  type ImageConnection {
+    items: [Image]!
+    nextToken: String!
   }
 
-  # todo definitions
-  type TodoConnection {
-    items: [Todo]!
-    nextToken: String
-  }
-
-  type Todo {
+  type Image {
     id: ID!
-    message: String
-    completed: Boolean
+    path: String!
+    type: String!
+    created: String!
+    faces: [Face]!
+    # labels: [Attribute]!
   }
 
-  input CreateTodoInput {
-    message: String!
+  input AddImageInput {
+    path: String!
+    type: String!
   }
 
-  type CreateTodoPayload {
-    todo: Todo
-  }
-
-  input ToggleTodoCompletedInput {
+  # face definitions
+  type Face {
     id: ID!
+    image_id: ID!
+    position: BoundingBox!
+    age: FaceAge!
+    emotions: [Attribute]!
+    attributes: [Attribute]!
   }
 
-  type ToggleTodoCompletedPayload {
-    todo: Todo
+  input FaceInput {
+    image_id: ID!
+    position: BoundingBoxInput
+    age: FaceAgeInput!
+    emotions: [AttributeInput!]!
+    attributes: [AttributeInput]!
   }
 
-  # This is a specific update mutation instead of a general one, so we
-  # don’t nest with a patch field .
-  # Instead we just provide one field, newText, which signals intent.
-  input UpdateTodoTextInput {
-    id: ID!
-    newMessage: String!
+  type FaceAge {
+    high: Float!
+    low: Float!
   }
 
-  type UpdateTodoTextPayload {
-    todo: Todo
+  input FaceAgeInput {
+    high: Float!
+    low: Float!
+  }
+
+  # misc definitions
+  type Attribute {
+    name: String!
+    confidence: Float!
+    value: Boolean
+  }
+
+  input AttributeInput {
+    name: String!
+    confidence: Float!
+    value: Boolean
+  }
+
+  type BoundingBox {
+    height: Float!
+    width: Float!
+    left: Float!
+    top: Float!
+  }
+
+  input BoundingBoxInput {
+    height: Float!
+    width: Float!
+    left: Float!
+    top: Float!
   }
 `;
 

@@ -1,13 +1,19 @@
 import { handleAuth } from '../auth';
 
-const listTodo = async (parent, args, context, info) => {
+const getImage = async (parent, args, context, info) => {
   handleAuth(context);
-  return context.models.Todo.getAll();
+  const { image_id } = args;
+  return context.models.Image.getById(image_id);
+};
+
+const listImage = async (parent, args, context, info) => {
+  handleAuth(context);
+  return context.models.Image.getAll();
 };
 
 const getUserInfo = async (parent, args, context, info) => {
   handleAuth(context);
-  return context.models.User.getById(args.userId);
+  return context.models.User.getById(args.user_id);
 };
 
 const now = async (parent, args, context, info) => {
@@ -16,7 +22,8 @@ const now = async (parent, args, context, info) => {
 
 const Query = {
   now,
-  listTodo,
+  getImage,
+  listImage,
   getUserInfo,
 };
 
