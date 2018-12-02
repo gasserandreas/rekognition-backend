@@ -55,6 +55,45 @@ class Image extends RootModel {
       return null;
     }
   }
+
+  async addLabels(id, labels) {
+    const image = await this.getById(id);
+
+    if (!image) {
+      return null;
+    }
+
+    // add id to labels
+    const newLabels = labels.map(label => ({
+      ...label,
+      id: uuid.v4(),
+    }));
+
+    const newImage = {
+      ...image,
+      labels: newLabels,
+    };
+
+    const params = {
+      TableName: this.DynamoClient.Tables.IMAGE,
+      Key:{
+        id,
+        'user_id': this.loggedInUserId(),
+      },
+      UpdateExpression: 'set labels = :l',
+      ExpressionAttributeValues: {
+        ':l': newLabels,
+      },
+    };
+
+    try {
+      await this.DynamoClient.update(params);
+      return newImage;
+    } catch (error) {
+      console.log(error);
+      return null;
+    }
+  }
 }
 
 export default Image;

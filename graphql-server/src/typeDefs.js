@@ -12,11 +12,17 @@ const generateTypeDefs = gql => gql`
     loginUser(input: LoginUserInput!): UserAuthPayload
     addImage(input: AddImageInput!): AddImagePayload
     addFaces(input: AddFacesInput!): AddFacesPayload
+    addLabelsToImage(input: AddLabelsToImageInput!): AddLabelsToImagePayload
   }
 
   # mutation input definitions
   input AddFacesInput {
     faces: [FaceInput]!
+  }
+
+  input AddLabelsToImageInput {
+    labels: [LabelInput]!
+    image_id: ID!
   }
 
   # mutation payloads
@@ -31,6 +37,10 @@ const generateTypeDefs = gql => gql`
 
   type AddFacesPayload {
     faces: [Face]!
+  }
+
+  type AddLabelsToImagePayload {
+    image: Image!
   }
 
   # --------------------
@@ -70,7 +80,7 @@ const generateTypeDefs = gql => gql`
     type: String!
     created: String!
     faces: [Face]!
-    # labels: [Attribute]!
+    labels: [Label]!
   }
 
   input AddImageInput {
@@ -104,6 +114,22 @@ const generateTypeDefs = gql => gql`
   input FaceAgeInput {
     high: Float!
     low: Float!
+  }
+
+  # label definitions
+  type Label {
+    id: ID!
+    name: String!
+    confidence: Float!
+    parents: [String]!
+    instances: [BoundingBox]!
+  }
+
+  input LabelInput {
+    name: String!
+    confidence: Float!
+    parents: [String]!
+    instances: [BoundingBoxInput]!
   }
 
   # misc definitions
