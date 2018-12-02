@@ -6,7 +6,10 @@ variable "api_version" {}
 variable "api_stage" {}
 variable "route53_zone_id" {}
 variable "certificate_arn" {}
-variable "dynamodb_table_name" {}
+variable "dynamodb_table_names" {
+  type        = "list"
+}
+variable "auth_app_secret" {}
 
 # create api
 resource "aws_api_gateway_rest_api" "api" {
@@ -23,8 +26,8 @@ module "name" {
 }
 
 # resources
-module "resource_user" {
-  source = "./resources/user"
+module "resource_graphql" {
+  source = "./resources/graphql"
 
   api_parent_id = "${aws_api_gateway_rest_api.api.root_resource_id}"
   rest_api_id   = "${aws_api_gateway_rest_api.api.id}"
@@ -33,7 +36,8 @@ module "resource_user" {
   app_name      = "${var.app_name}"
   lambda_role   = "${aws_iam_role.lambda_role.arn}"
 
-  dynamodb_table_name = "${var.dynamodb_table_name}"
+  dynamodb_table_names = "${var.dynamodb_table_names}"
+  auth_app_secret = "${var.auth_app_secret}"
 }
 
 # lambda execution role
@@ -107,7 +111,7 @@ resource "aws_iam_role_policy" "dynamo_log_group_policy" {
 # deploy api
 resource "aws_api_gateway_deployment" "deployment" {
   depends_on = [
-    "module.resource_user",
+    "module.resource_graphql",
   ]
 
   rest_api_id = "${aws_api_gateway_rest_api.api.id}"
