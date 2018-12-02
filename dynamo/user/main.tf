@@ -11,6 +11,25 @@ resource "aws_dynamodb_table" "dynamo_simple_table" {
     name = "id"
     type = "S"
   }
+
+  attribute {
+    name = "email"
+    type = "S"
+  }
+
+  ttl {
+    attribute_name = "TimeToExist"
+    enabled        = false
+  }
+
+  global_secondary_index {
+    name               = "user_email"
+    hash_key           = "email"
+    write_capacity     = 5
+    read_capacity      = 5
+    projection_type    = "INCLUDE"
+    non_key_attributes = ["email"]
+  }
 }
 
 output "arn" {
