@@ -3,8 +3,8 @@ variable "app_name" {}
 
 resource "aws_dynamodb_table" "dynamo_simple_table" {
   name           = "${var.account_id}-${var.app_name}-image"
-  read_capacity  = 10
-  write_capacity = 10
+  read_capacity  = 2
+  write_capacity = 1
   hash_key = "user_id"
   range_key = "id"
 
@@ -37,6 +37,6 @@ output "arn" {
   value = "${aws_dynamodb_table.dynamo_simple_table.arn}"
 }
 
-output "table_name" {
+output "name" {
   value = "${aws_dynamodb_table.dynamo_simple_table.name}"
 }

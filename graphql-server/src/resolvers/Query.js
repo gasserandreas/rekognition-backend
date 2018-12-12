@@ -17,6 +17,10 @@ const getUserInfo = async (parent, args, context, info) => {
 };
 
 const now = async (parent, args, context, info) => {
+  console.log(parent);
+  console.log(args);
+  console.log(context);
+  console.log(info);
   return new Date().toISOString();
 }; 
 

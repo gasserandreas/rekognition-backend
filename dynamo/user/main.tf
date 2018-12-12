@@ -3,8 +3,8 @@ variable "app_name" {}
 
 resource "aws_dynamodb_table" "dynamo_simple_table" {
   name           = "${var.account_id}-${var.app_name}-user"
-  read_capacity  = 10
-  write_capacity = 10
+  read_capacity  = 2
+  write_capacity = 1
   hash_key       = "id"
 
   attribute {
@@ -25,8 +25,8 @@ resource "aws_dynamodb_table" "dynamo_simple_table" {
   global_secondary_index {
     name               = "user_email"
     hash_key           = "email"
-    write_capacity     = 5
-    read_capacity      = 5
+    write_capacity     = 1
+    read_capacity      = 1
     projection_type    = "INCLUDE"
     non_key_attributes = ["email"]
   }
