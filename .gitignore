@@ -10,3 +10,6 @@
 
 # node_modules
 **/node_modules/
+
+# 
+graphql-server/dist.zip
