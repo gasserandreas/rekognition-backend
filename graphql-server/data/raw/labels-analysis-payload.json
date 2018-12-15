@@ -1,0 +1,290 @@
+{
+  "LabelModelVersion": "2.0",
+  "Labels": [
+    {
+      "Confidence": 99.836891174316,
+      "Instances": [
+        {
+          "BoundingBox": {
+            "Height": 0.7558274269104,
+            "Left": 0.070766597986221,
+            "Top": 0.20415614545345,
+            "Width": 0.41395425796509
+          },
+          "Confidence": 99.836891174316
+        },
+        {
+          "BoundingBox": {
+            "Height": 0.65523493289948,
+            "Left": 0.55906367301941,
+            "Top": 0.23385967314243,
+            "Width": 0.2800101339817
+          },
+          "Confidence": 98.982345581055
+        },
+        {
+          "BoundingBox": {
+            "Height": 0.1684712022543,
+            "Left": 0.88844799995422,
+            "Top": 0.11864499747753,
+            "Width": 0.044207964092493
+          },
+          "Confidence": 97.189460754395
+        },
+        {
+          "BoundingBox": {
+            "Height": 0.2027143985033,
+            "Left": 0.66703253984451,
+            "Top": 0.089612074196339,
+            "Width": 0.057963635772467
+          },
+          "Confidence": 95.756645202637
+        }
+      ],
+      "Name": "Person",
+      "Parents": [
+        
+      ]
+    },
+    {
+      "Confidence": 99.836891174316,
+      "Instances": [
+        
+      ],
+      "Name": "Human",
+      "Parents": [
+        
+      ]
+    },
+    {
+      "Confidence": 99.630409240723,
+      "Instances": [
+        
+      ],
+      "Name": "Clothing",
+      "Parents": [
+        
+      ]
+    },
+    {
+      "Confidence": 99.630409240723,
+      "Instances": [
+        
+      ],
+      "Name": "Apparel",
+      "Parents": [
+        
+      ]
+    },
+    {
+      "Confidence": 99.413528442383,
+      "Instances": [
+        {
+          "BoundingBox": {
+            "Height": 0.41568621993065,
+            "Left": 0.55300354957581,
+            "Top": 0.47527313232422,
+            "Width": 0.1860579252243
+          },
+          "Confidence": 96.244094848633
+        }
+      ],
+      "Name": "Chair",
+      "Parents": [
+        {
+          "Name": "Furniture"
+        }
+      ]
+    },
+    {
+      "Confidence": 99.413528442383,
+      "Instances": [
+        
+      ],
+      "Name": "Furniture",
+      "Parents": [
+        
+      ]
+    },
+    {
+      "Confidence": 97.538696289062,
+      "Instances": [
+        
+      ],
+      "Name": "Plant",
+      "Parents": [
+        
+      ]
+    },
+    {
+      "Confidence": 97.538696289062,
+      "Instances": [
+        
+      ],
+      "Name": "Grass",
+      "Parents": [
+        {
+          "Name": "Plant"
+        }
+      ]
+    },
+    {
+      "Confidence": 86.81510925293,
+      "Instances": [
+        
+      ],
+      "Name": "Female",
+      "Parents": [
+        {
+          "Name": "Person"
+        }
+      ]
+    },
+    {
+      "Confidence": 85.505172729492,
+      "Instances": [
+        {
+          "BoundingBox": {
+            "Height": 0.099247761070728,
+            "Left": 0.76953250169754,
+            "Top": 0.74655866622925,
+            "Width": 0.059062354266644
+          },
+          "Confidence": 85.505172729492
+        }
+      ],
+      "Name": "Shoe",
+      "Parents": [
+        {
+          "Name": "Footwear"
+        },
+        {
+          "Name": "Clothing"
+        }
+      ]
+    },
+    {
+      "Confidence": 85.505172729492,
+      "Instances": [
+        
+      ],
+      "Name": "Footwear",
+      "Parents": [
+        {
+          "Name": "Clothing"
+        }
+      ]
+    },
+    {
+      "Confidence": 82.019874572754,
+      "Instances": [
+        {
+          "BoundingBox": {
+            "Height": 0.29648488759995,
+            "Left": 0.55297088623047,
+            "Top": 0.0041709928773344,
+            "Width": 0.4344907104969
+          },
+          "Confidence": 82.019874572754
+        }
+      ],
+      "Name": "Tent",
+      "Parents": [
+        
+      ]
+    },
+    {
+      "Confidence": 80.788299560547,
+      "Instances": [
+        
+      ],
+      "Name": "Skirt",
+      "Parents": [
+        {
+          "Name": "Clothing"
+        }
+      ]
+    },
+    {
+      "Confidence": 76.108367919922,
+      "Instances": [
+        
+      ],
+      "Name": "Tartan",
+      "Parents": [
+        
+      ]
+    },
+    {
+      "Confidence": 76.108367919922,
+      "Instances": [
+        
+      ],
+      "Name": "Plaid",
+      "Parents": [
+        
+      ]
+    },
+    {
+      "Confidence": 75.815742492676,
+      "Instances": [
+        
+      ],
+      "Name": "Sitting",
+      "Parents": [
+        {
+          "Name": "Person"
+        }
+      ]
+    },
+    {
+      "Confidence": 71.880485534668,
+      "Instances": [
+        
+      ],
+      "Name": "Woman",
+      "Parents": [
+        {
+          "Name": "Person"
+        },
+        {
+          "Name": "Female"
+        }
+      ]
+    },
+    {
+      "Confidence": 71.78288269043,
+      "Instances": [
+        
+      ],
+      "Name": "Camping",
+      "Parents": [
+        {
+          "Name": "Person"
+        }
+      ]
+    },
+    {
+      "Confidence": 70.796585083008,
+      "Instances": [
+        
+      ],
+      "Name": "Food",
+      "Parents": [
+        
+      ]
+    },
+    {
+      "Confidence": 70.796585083008,
+      "Instances": [
+        
+      ],
+      "Name": "Meal",
+      "Parents": [
+        {
+          "Name": "Food"
+        }
+      ]
+    }
+  ]
+}

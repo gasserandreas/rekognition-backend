@@ -1,0 +1,36 @@
+{
+  "name": "graphql-server",
+  "version": "1.0.0",
+  "main": "index.js",
+  "author": "Andreas Gasser",
+  "license": "UNLICENSED",
+  "scripts": {
+    "start": "npm-run-all --parallel watch:server watch:build",
+    "watch:build": "webpack --watch --env.NODE_ENV=local",
+    "watch:server": "nodemon \"./dist/local/index.js\" --watch \"./dist\"",
+    "build": "webpack --env.NODE_ENV=development",
+    "build-prod": "webpack --env.NODE_ENV=production",
+    "zip": "cd ./dist/lambda && zip -r ../../dist.zip ./"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.1.6",
+    "@babel/preset-env": "^7.1.6",
+    "apollo-server": "^2.3.1",
+    "babel-loader": "^8.0.4",
+    "babel-preset-env": "^1.7.0",
+    "nodemon": "^1.18.6",
+    "webpack": "^4.26.0",
+    "webpack-cli": "^3.1.2"
+  },
+  "dependencies": {
+    "apollo-server-lambda": "^2.3.1",
+    "aws-sdk": "^2.358.0",
+    "bcryptjs": "^2.4.3",
+    "dotenv": "^6.1.0",
+    "graphql": "^14.0.2",
+    "graphql-tools": "^4.0.3",
+    "jsonwebtoken": "^8.4.0",
+    "npm-run-all": "^4.1.3",
+    "uuid": "^3.3.2"
+  }
+}
