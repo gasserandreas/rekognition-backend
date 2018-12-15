@@ -27,7 +27,8 @@ export function getAuthorizationUserId(authorization) {
     const { userId } = jwt.verify(token, APP_SECRET);
     return userId;
   } catch (error) {
-    throw null;
+    console.log(error);
+    return null;
   }
 }
 

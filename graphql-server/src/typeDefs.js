@@ -8,6 +8,7 @@ const generateTypeDefs = gql => gql`
   }
 
   type Mutation {
+    empty: String
     signUpUser(input: SignUpUserInput!): UserAuthPayload
     loginUser(input: LoginUserInput!): UserAuthPayload
     addImage(input: AddImageInput!): AddImagePayload

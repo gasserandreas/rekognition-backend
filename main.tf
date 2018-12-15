@@ -45,6 +45,7 @@ module "image-buckets" {
   app_name   = "${var.app_name}"
 }
 
+# # enable on loocal
 # provider "aws" {
 #   # alias = "local"
 #   region = "${var.app_region}"
