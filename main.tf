@@ -31,7 +31,6 @@ module "gateway" {
 
   dynamodb_table_names = [
     "{IMAGE:${module.dynamo_table_image.name}}",
-    "{FACE:${module.dynamo_table_face.name}}",
     "{USER:${module.dynamo_table_user.name}}",
   ]
 }
@@ -70,13 +69,6 @@ module "image-buckets" {
 
 module "dynamo_table_image" {
   source = "./dynamo/image"
-
-  account_id = "${var.account_id}"
-  app_name   = "${var.app_name}"
-} 
-
-module "dynamo_table_face" {
-  source = "./dynamo/face"
 
   account_id = "${var.account_id}"
   app_name   = "${var.app_name}"
