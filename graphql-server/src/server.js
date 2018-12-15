@@ -3,7 +3,6 @@ import dotenv from 'dotenv';
 
 import UserModel from './models/User';
 import ImageModel from './models/Image';
-import FaceModel from './models/Face';
 
 import resolvers from './resolvers';
 
@@ -62,7 +61,6 @@ export const generateServer = (Server, gql, local = false) => new Server({
     
     const models = {
       User: new UserModel({ DynamoClient, auth }),
-      Face: new FaceModel({ DynamoClient, auth }),
       Image: new ImageModel({ DynamoClient, auth }),
     };
 

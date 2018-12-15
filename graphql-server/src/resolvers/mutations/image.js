@@ -19,3 +19,17 @@ export const addLabelsToImage = async (parent, args, context, info) => {
     image: newImage,
   };
 };
+
+export const addFacesToImage = async (parent, args, context, info) => {
+  handleAuth(context);
+
+  // create input data
+  const { input } = args;
+  const { image_id, faces } = input;
+
+  const newImage = await context.models.Image.addFaces(image_id, faces);
+
+  return {
+    image: newImage,
+  };
+};

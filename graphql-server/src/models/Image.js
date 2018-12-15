@@ -94,6 +94,45 @@ class Image extends RootModel {
       return null;
     }
   }
+
+  async addFaces(id, faces) {
+    const image = await this.getById(id);
+
+    if (!image) {
+      return null;
+    }
+
+    const newFaces =  faces.map(face => ({
+      ...face,
+      id: uuid.v4(),
+      created: new Date().toISOString(),
+    }));
+
+    const newImage = {
+      ...image,
+      faces: newFaces,
+    }
+
+    const params = {
+      TableName: this.DynamoClient.Tables.IMAGE,
+      Key:{
+        id,
+        'user_id': this.loggedInUserId(),
+      },
+      UpdateExpression: 'set faces = :f',
+      ExpressionAttributeValues: {
+        ':f': newFaces,
+      },
+    };
+
+    try {
+      await this.DynamoClient.update(params);
+      return newImage;
+    } catch (error) {
+      console.log(error);
+      return null;
+    }
+  }
 }
 
 export default Image;

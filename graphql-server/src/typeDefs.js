@@ -12,13 +12,14 @@ const generateTypeDefs = gql => gql`
     signUpUser(input: SignUpUserInput!): UserAuthPayload
     loginUser(input: LoginUserInput!): UserAuthPayload
     addImage(input: AddImageInput!): AddImagePayload
-    addFaces(input: AddFacesInput!): AddFacesPayload
+    addFacesToImage(input: AddFacesToImageInput!): AddFacesToImagePayload
     addLabelsToImage(input: AddLabelsToImageInput!): AddLabelsToImagePayload
   }
 
   # mutation input definitions
-  input AddFacesInput {
+  input AddFacesToImageInput {
     faces: [FaceInput]!
+    image_id: ID!
   }
 
   input AddLabelsToImageInput {
@@ -36,8 +37,8 @@ const generateTypeDefs = gql => gql`
     image: Image
   }
 
-  type AddFacesPayload {
-    faces: [Face]!
+  type AddFacesToImagePayload {
+    image: Image!
   }
 
   type AddLabelsToImagePayload {
@@ -92,7 +93,6 @@ const generateTypeDefs = gql => gql`
   # face definitions
   type Face {
     id: ID!
-    image_id: ID!
     position: BoundingBox!
     age: FaceAge!
     emotions: [Attribute]!
@@ -100,7 +100,6 @@ const generateTypeDefs = gql => gql`
   }
 
   input FaceInput {
-    image_id: ID!
     position: BoundingBoxInput
     age: FaceAgeInput!
     emotions: [AttributeInput!]!
