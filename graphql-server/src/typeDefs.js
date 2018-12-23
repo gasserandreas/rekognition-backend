@@ -11,6 +11,7 @@ const generateTypeDefs = gql => gql`
     empty: String
     signUpUser(input: SignUpUserInput!): UserAuthPayload
     loginUser(input: LoginUserInput!): UserAuthPayload
+    refreshToken(input: TokenRefreshInput!): UserAuthPayload
     addImage(input: AddImageInput!): AddImagePayload
     addFacesToImage(input: AddFacesToImageInput!): AddFacesToImagePayload
     addLabelsToImage(input: AddLabelsToImageInput!): AddLabelsToImagePayload
@@ -68,6 +69,11 @@ const generateTypeDefs = gql => gql`
   input LoginUserInput {
     email: String!
     password: String!
+  }
+
+  input TokenRefreshInput {
+    token: String!
+    userId: String!
   }
 
   # image definitions

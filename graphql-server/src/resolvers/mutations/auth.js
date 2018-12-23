@@ -1,8 +1,9 @@
 import {
-  creatToken,
+  createToken,
   createHash,
   compareHashes,
   createAuthError,
+  getUserIdFromToken,
 } from '../../auth';
 
 export const signUpUser = async (parent, args, context, info) => {
@@ -22,7 +23,7 @@ export const signUpUser = async (parent, args, context, info) => {
   }
 
   // create token
-  const token = creatToken(newUser.id);
+  const token = createToken(newUser.id);
 
   return {
     token,
@@ -47,10 +48,35 @@ export const loginUser = async (parent, args, context, info) => {
   }
   
   // create token
-  const token = creatToken(user.id);
+  const token = createToken(user.id);
 
   return {
     token,
+    user,
+  };
+};
+
+export const refreshToken = async (parent, args, context, info) => {
+  const { input } = args;
+  const { token, userId } = input;
+
+  if(userId !== getUserIdFromToken(token)) {
+    throw createAuthError('Invalid token, userId combination');
+  }
+
+  // re-create token
+  const newToken = createToken(userId);
+  console.log(newToken);
+
+  // get user
+  const user = await context.models.User.getById(userId);
+
+  if (!user) {
+    throw createAuthError('Invalid token, userId combination');
+  }
+
+  return {
+    token: newToken,
     user,
   };
 };

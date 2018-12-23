@@ -9,8 +9,12 @@ import dotenv from 'dotenv';
 dotenv.config();
 
 // jwt token related functions
-export function creatToken(userId) {
-  return jwt.sign({ userId }, process.env.APP_SECRET);
+export function createToken(userId) {
+  const obj = {
+    userId,
+    createdAt: Date.now(),
+  };
+  return jwt.sign(obj, process.env.APP_SECRET);
 }
 
 export function getAuthorizationUserId(authorization) {
@@ -18,11 +22,15 @@ export function getAuthorizationUserId(authorization) {
     return null;
   }
 
+  const token = authorization.replace('Bearer ', '');
+  return getUserIdFromToken(token);
+}
+
+export function getUserIdFromToken(token) {
   const {
     APP_SECRET
   } = process.env;
 
-  const token = authorization.replace('Bearer ', '');
   try {
     const { userId } = jwt.verify(token, APP_SECRET);
     return userId;
