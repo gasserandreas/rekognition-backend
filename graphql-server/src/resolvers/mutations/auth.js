@@ -3,6 +3,8 @@ import {
   createHash,
   compareHashes,
   createAuthError,
+  createValidationError,
+  createUserInputError,
   getUserIdFromToken,
 } from '../../auth';
 
@@ -39,12 +41,12 @@ export const loginUser = async (parent, args, context, info) => {
   const user = await context.models.User.getByEmail(email);
 
   if (!user) {
-    throw createAuthError('Could not login user')
+    throw createValidationError('Could not login user')
   }
 
   // validate password
-  if (!compareHashes(user.password, await createHash(password))) {
-    throw createAuthError('Could not login user')
+  if (! await compareHashes(password, user.password)) {
+    throw createValidationError('Could not login user')
   }
   
   // create token

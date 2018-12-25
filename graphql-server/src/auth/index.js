@@ -1,5 +1,14 @@
-import { AuthenticationError as AuthenticationErrorLocal } from 'apollo-server'
-import { AuthenticationError as AuthenticationErrorLambda } from 'apollo-server-lambda'
+import {
+  AuthenticationError as AuthenticationErrorLocal,
+  UserInputError as UserInputErrorLocal,
+  ValidationError as ValidationErrorLocal,
+} from 'apollo-server'
+
+import {
+  AuthenticationError as AuthenticationErrorLambda,
+  UserInputError as UserInputErrorLambda,
+  ValidationError as ValidationErrorLambda,
+} from 'apollo-server-lambda'
 
 import jwt from 'jsonwebtoken';
 import bcrypt from 'bcryptjs';
@@ -45,8 +54,8 @@ export async function createHash(str) {
   return bcrypt.hash(str, 10);
 }
 
-export async function compareHashes(hashA, hashB) {
-  return bcrypt.compare(hashA, hashB)
+export async function compareHashes(password, hash) {
+  return bcrypt.compare(password, hash);
 }
 
 export function isAuthenticated(context) {
@@ -63,6 +72,16 @@ export function isAuthenticated(context) {
 export function createAuthError(message) {
   const AuthError = AuthenticationErrorLocal || AuthenticationErrorLambda;
   return new AuthError(message);
+}
+
+export function createUserInputError(message) {
+  const UserInputError = UserInputErrorLocal || UserInputErrorLambda;
+  return new UserInputError(message);
+}
+
+export function createValidationError(message) {
+  const ValidationError = ValidationErrorLocal || ValidationErrorLambda;
+  return new ValidationError(message);
 }
 
 export function handleAuth(context) {
