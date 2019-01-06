@@ -1,3 +1,4 @@
+import uuid from 'uuid';
 import { handleAuth } from '../../auth';
 
 export const addImage = async (parent, args, context, info) => {

@@ -89,15 +89,17 @@ const generateTypeDefs = gql => gql`
 
   type Image {
     id: ID!
-    path: String!
+    name: String!
     type: String!
+    path: String!
     created: String!
     faces: [Face]!
     labels: [Label]!
   }
 
   input AddImageInput {
-    path: String!
+    id: String!
+    name: String!
     type: String!
   }
 

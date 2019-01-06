@@ -15,13 +15,14 @@ export const signUpUser = async (parent, args, context, info) => {
   // check if user is already in system
   const user = await context.models.User.getByEmail(email);
   if (user) {
-    throw new Error('Email is already registered');
+    // throw new Error('Email is already registered');
+    throw new createValidationError('Email is already registered');
   }
 
   // create new user
   const newUser = await context.models.User.createUser(input);
   if (!newUser) {
-    throw createAuthError('Could not register user');
+    throw new createValidationError('Could not register user');
   }
 
   // create token
@@ -93,5 +94,5 @@ export const emailInUse = async (parent, args, context, info) => {
   /**
    * if no user: return true, else false
    */
-  return !user;
+  return !!user;
 };
