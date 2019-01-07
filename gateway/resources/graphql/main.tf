@@ -7,6 +7,9 @@ variable "lambda_role" {}
 variable "dynamodb_table_names" {
   type        = "list"
 }
+variable "s3_bucket_names" {
+  type        = "list"
+}
 variable "auth_app_secret" {}
 
 
@@ -123,5 +126,6 @@ module "graph_lambda" {
   resource_path  = "${aws_api_gateway_resource.graph.path}"
 
   dynamodb_table_names = "${var.dynamodb_table_names}"
+  s3_bucket_names="${var.s3_bucket_names}"
   auth_app_secret = "${var.auth_app_secret}"
 }

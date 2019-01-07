@@ -1,13 +1,18 @@
-import uuid from 'uuid';
 import { handleAuth } from '../../auth';
 
 export const addImage = async (parent, args, context, info) => {
   handleAuth(context);
+
+  // upload file
+  await context.models.Image.uploadNewImage(args.input);
+
+  // save to dynamo db
   const newImage = await context.models.Image.createImage(args.input);
+
   return {
     image: newImage,
   };
-}
+};
 
 export const addLabelsToImage = async (parent, args, context, info) => {
   handleAuth(context);

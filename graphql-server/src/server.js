@@ -7,6 +7,7 @@ import ImageModel from './models/Image';
 import resolvers from './resolvers';
 
 import DynamoFactory, { generateDynamoTables } from './dynamo';
+import AwsFactory from './aws';
 
 import { getAuthorizationUserId } from './auth';
 
@@ -17,6 +18,9 @@ dotenv.config();
 const {
   NODE_ENV,
   DYNAMODB_TABLE_NAMES,
+  AWS_DEFAULT_REGION,
+  AWS_DEFAULT_ACCESS_KEY_ID,
+  AWS_DEFAULT_SECRET_ACCESS_KEY,
 } = process.env;
 
 // translate vars into dynamo table config
@@ -58,10 +62,26 @@ export const generateServer = (Server, gql, local = false) => new Server({
 
     // initialize data access
     const DynamoClient = new DynamoFactory(dynamoTables, dynamoConfig)
+
+    // initialize AWS access
+    let AwsClient;
+    if (local) {
+      console.log('create local AwsFactory');
+      AwsClient = new AwsFactory({
+        local: true,
+        awsConfig: {
+          accessKeyId: AWS_DEFAULT_ACCESS_KEY_ID,
+          secretAccessKey: AWS_DEFAULT_SECRET_ACCESS_KEY,
+          region: AWS_DEFAULT_REGION,
+        },
+      });
+    } else {
+      AwsClient = new AwsFactory();
+    }
     
     const models = {
-      User: new UserModel({ DynamoClient, auth }),
-      Image: new ImageModel({ DynamoClient, auth }),
+      User: new UserModel({ DynamoClient, AwsClient, auth }),
+      Image: new ImageModel({ DynamoClient, AwsClient, auth }),
     };
 
     return {

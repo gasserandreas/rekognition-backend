@@ -98,7 +98,7 @@ const generateTypeDefs = gql => gql`
   }
 
   input AddImageInput {
-    id: String!
+    file: Upload!
     name: String!
     type: String!
   }

@@ -37,6 +37,7 @@ class Image extends RootModel {
   async createImage(input) {
     const newImage = {
       ...input,
+      id: uuid.v4(),
       user_id: this.loggedInUserId(),
       created: new Date().toISOString(),
     }
@@ -53,6 +54,27 @@ class Image extends RootModel {
       console.log(error);
       return null;
     }
+  }
+
+  async uploadNewImage(input) {
+    const { file, filename, type } = await input;
+
+    // upload file to s3
+    const bucketName = this.AwsClient.BucketsNames.IMAGE;
+    const s3ImagePath = `${this.loggedInUserId()}/${filename}`;
+
+    // create buffer from received buffer content
+    const buffer = new Buffer(file);
+    
+    // upload image
+    return this.AwsClient.uploadImageToS3(bucketName, s3ImagePath, type, buffer)
+      .then(() => {
+        return {
+          uploadPath: s3ImagePath,
+          filename,
+          type,
+        };
+      });
   }
 
   async addLabels(id, labels) {
