@@ -15,7 +15,6 @@ export const signUpUser = async (parent, args, context, info) => {
   // check if user is already in system
   const user = await context.models.User.getByEmail(email);
   if (user) {
-    // throw new Error('Email is already registered');
     throw new createValidationError('Email is already registered');
   }
 

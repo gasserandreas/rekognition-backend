@@ -66,7 +66,6 @@ export const generateServer = (Server, gql, local = false) => new Server({
     // initialize AWS access
     let AwsClient;
     if (local) {
-      console.log('create local AwsFactory');
       AwsClient = new AwsFactory({
         local: true,
         awsConfig: {

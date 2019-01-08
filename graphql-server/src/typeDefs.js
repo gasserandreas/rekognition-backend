@@ -14,19 +14,6 @@ const generateTypeDefs = gql => gql`
     refreshToken(input: TokenRefreshInput!): UserAuthPayload
     emailInUse(input: EmailInUseInput!): Boolean
     addImage(input: AddImageInput!): AddImagePayload
-    addFacesToImage(input: AddFacesToImageInput!): AddFacesToImagePayload
-    addLabelsToImage(input: AddLabelsToImageInput!): AddLabelsToImagePayload
-  }
-
-  # mutation input definitions
-  input AddFacesToImageInput {
-    faces: [FaceInput]!
-    image_id: ID!
-  }
-
-  input AddLabelsToImageInput {
-    labels: [LabelInput]!
-    image_id: ID!
   }
 
   # mutation payloads
@@ -37,14 +24,6 @@ const generateTypeDefs = gql => gql`
 
   type AddImagePayload {
     image: Image
-  }
-
-  type AddFacesToImagePayload {
-    image: Image!
-  }
-
-  type AddLabelsToImagePayload {
-    image: Image!
   }
 
   # --------------------
@@ -101,30 +80,19 @@ const generateTypeDefs = gql => gql`
     file: Upload!
     name: String!
     type: String!
+    analyse: Boolean
   }
 
   # face definitions
   type Face {
     id: ID!
-    position: BoundingBox!
-    age: FaceAge!
+    position: BoundingBox
+    age: FaceAge
     emotions: [Attribute]!
     attributes: [Attribute]!
   }
 
-  input FaceInput {
-    position: BoundingBoxInput
-    age: FaceAgeInput!
-    emotions: [AttributeInput!]!
-    attributes: [AttributeInput]!
-  }
-
   type FaceAge {
-    high: Float!
-    low: Float!
-  }
-
-  input FaceAgeInput {
     high: Float!
     low: Float!
   }
@@ -138,34 +106,14 @@ const generateTypeDefs = gql => gql`
     instances: [BoundingBox]!
   }
 
-  input LabelInput {
-    name: String!
-    confidence: Float!
-    parents: [String]!
-    instances: [BoundingBoxInput]!
-  }
-
   # misc definitions
   type Attribute {
     name: String!
     confidence: Float!
-    value: Boolean
-  }
-
-  input AttributeInput {
-    name: String!
-    confidence: Float!
-    value: Boolean
+    value: String
   }
 
   type BoundingBox {
-    height: Float!
-    width: Float!
-    left: Float!
-    top: Float!
-  }
-
-  input BoundingBoxInput {
     height: Float!
     width: Float!
     left: Float!

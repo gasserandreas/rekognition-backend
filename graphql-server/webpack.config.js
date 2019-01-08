@@ -34,6 +34,9 @@ module.exports = env => {
       filename: '[name]/index.js',
       path: path.resolve(__dirname, 'dist'),
       libraryTarget: 'commonjs'
+    },
+    externals: {
+      sharp: 'sharp'
     }
   };
 };

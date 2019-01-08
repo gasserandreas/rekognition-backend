@@ -60,7 +60,7 @@ class AwsFactory {
 
   getRekognition() {
     if (!this.rekognition) {
-      this.rekognition = new this.AWS.Rekognition();
+      this.rekognition = new AWS.Rekognition();
     }
 
     return this.rekognition;
@@ -189,12 +189,7 @@ class AwsFactory {
       MinConfidence: minConfidence,
     };
   
-    return rekognition.detectLabels(options).promise()
-      .then((data) => {
-        console.log(data);
-  
-        return data;
-      });
+    return rekognition.detectLabels(options).promise();
   };
 }
 
