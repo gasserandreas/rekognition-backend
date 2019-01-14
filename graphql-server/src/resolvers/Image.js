@@ -15,7 +15,7 @@ export default {
     const { meta } = parent;
 
     if (meta) {
-      return meat;
+      return meta;
     }
 
     // return fallback
@@ -23,6 +23,9 @@ export default {
       type: parent.type || '',
       orientation: Orientation.LANDSCAPE,
       size: 0,
+      width: 0,
+      height: 0,
+      density: 0,
     };
   },
 };

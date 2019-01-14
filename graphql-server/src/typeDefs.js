@@ -110,6 +110,9 @@ const generateTypeDefs = gql => gql`
     type: String!
     orientation: Orientation!
     size: Float!
+    width: Float!
+    height: Float!
+    density: Float
   }
 
   # misc definitions

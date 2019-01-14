@@ -9,7 +9,10 @@ import {
   mapAge,
   autorotateImage,
   resizeImage,
+  getImageMeta,
 } from './util';
+
+import { Orientation } from '../TypeDefs';
 
 class Image extends RootModel {
   async getAll() {
@@ -175,6 +178,35 @@ class Image extends RootModel {
     } catch (error) {
       console.log(error);
       return [];
+    }
+  }
+
+  async detectImageMeta(file) {
+    // create buffer from received buffer content
+    const buffer = new Buffer(file);
+
+    try {
+      const meta = await getImageMeta(buffer);
+
+      const {
+        size,
+        width,
+        height,
+        density,
+        format,
+      } = meta;
+
+      return {
+        size,
+        width,
+        height,
+        density,
+        type: format,
+        orientation: width >= height ? Orientation.LANDSCAPE : Orientation.PORTRAIT,
+      };
+    } catch (error) {
+      console.log(error);
+      return {};
     }
   }
 }
