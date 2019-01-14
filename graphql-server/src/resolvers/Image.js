@@ -1,3 +1,4 @@
+import { Orientation } from '../models/TypeDefs';
 
 export default {
   path: async (parent, args, context, info) => {
@@ -10,4 +11,18 @@ export default {
   labels: async (parent, args, context, info) => {
     return parent.labels || [];
   },
-}
+  meta: async (parent, args, context, info) => {
+    const { meta } = parent;
+
+    if (meta) {
+      return meat;
+    }
+
+    // return fallback
+    return {
+      type: parent.type || '',
+      orientation: Orientation.LANDSCAPE,
+      size: 0,
+    };
+  },
+};

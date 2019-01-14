@@ -69,11 +69,11 @@ const generateTypeDefs = gql => gql`
   type Image {
     id: ID!
     name: String!
-    type: String!
     path: String!
     created: String!
     faces: [Face]!
     labels: [Label]!
+    meta: Meta!
   }
 
   input AddImageInput {
@@ -106,6 +106,12 @@ const generateTypeDefs = gql => gql`
     instances: [BoundingBox]!
   }
 
+  type Meta {
+    type: String!
+    orientation: Orientation!
+    size: Float!
+  }
+
   # misc definitions
   type Attribute {
     name: String!
@@ -118,6 +124,16 @@ const generateTypeDefs = gql => gql`
     width: Float!
     left: Float!
     top: Float!
+  }
+
+  type KeyValue {
+    key: String!
+    value: String
+  }
+
+  enum Orientation {
+    LANDSCAPE
+    PORTRAIT  
   }
 `;
 
