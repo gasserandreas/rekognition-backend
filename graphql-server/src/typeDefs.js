@@ -71,8 +71,8 @@ const generateTypeDefs = gql => gql`
     name: String!
     path: String!
     created: String!
-    faces: [Face]!
-    labels: [Label]!
+    faces: FacePayload
+    labels: LabelPayload
     meta: Meta!
   }
 
@@ -84,6 +84,10 @@ const generateTypeDefs = gql => gql`
   }
 
   # face definitions
+  type FacePayload {
+    items: [Face]!
+  }
+
   type Face {
     id: ID!
     position: BoundingBox
@@ -98,6 +102,10 @@ const generateTypeDefs = gql => gql`
   }
 
   # label definitions
+  type LabelPayload {
+    items: [Label]!
+  }
+
   type Label {
     id: ID!
     name: String!
@@ -113,6 +121,8 @@ const generateTypeDefs = gql => gql`
     width: Float!
     height: Float!
     density: Float
+    numberOfFaces: Float
+    numberOfLabels: Float
   }
 
   # misc definitions
