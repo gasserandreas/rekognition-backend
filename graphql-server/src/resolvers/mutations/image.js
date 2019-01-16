@@ -17,16 +17,19 @@ export const addImage = async (parent, args, context, info) => {
   // do rekognition if needed
   let labels = [];
   let faces = [];
+  let meta = null;
 
   if (analyse) {
     // parallel rekognition call
     const rekognitionResults = await Promise.all([
       context.models.Image.detectLabels(uploadPath),
-      context.models.Image.detectFaces(uploadPath)
+      context.models.Image.detectFaces(uploadPath),
+      context.models.Image.detectImageMeta(file),
     ]);
 
     labels = rekognitionResults[0];
     faces = rekognitionResults[1];
+    meta = rekognitionResults[2];
   }
 
   // create and store image
@@ -35,7 +38,9 @@ export const addImage = async (parent, args, context, info) => {
     type,
     faces,
     labels,
+    meta,
   };
+  console.log(imageInput);
   const image = await context.models.Image.createImage(imageInput);
 
   return {

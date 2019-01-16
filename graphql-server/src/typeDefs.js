@@ -69,11 +69,11 @@ const generateTypeDefs = gql => gql`
   type Image {
     id: ID!
     name: String!
-    type: String!
     path: String!
     created: String!
-    faces: [Face]!
-    labels: [Label]!
+    faces: FacePayload
+    labels: LabelPayload
+    meta: Meta!
   }
 
   input AddImageInput {
@@ -84,6 +84,10 @@ const generateTypeDefs = gql => gql`
   }
 
   # face definitions
+  type FacePayload {
+    items: [Face]!
+  }
+
   type Face {
     id: ID!
     position: BoundingBox
@@ -98,12 +102,27 @@ const generateTypeDefs = gql => gql`
   }
 
   # label definitions
+  type LabelPayload {
+    items: [Label]!
+  }
+
   type Label {
     id: ID!
     name: String!
     confidence: Float!
     parents: [String]!
     instances: [BoundingBox]!
+  }
+
+  type Meta {
+    type: String!
+    orientation: Orientation!
+    size: Float!
+    width: Float!
+    height: Float!
+    density: Float
+    numberOfFaces: Float
+    numberOfLabels: Float
   }
 
   # misc definitions
@@ -118,6 +137,16 @@ const generateTypeDefs = gql => gql`
     width: Float!
     left: Float!
     top: Float!
+  }
+
+  type KeyValue {
+    key: String!
+    value: String
+  }
+
+  enum Orientation {
+    LANDSCAPE
+    PORTRAIT  
   }
 `;
 

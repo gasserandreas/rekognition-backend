@@ -89,4 +89,9 @@ export const resizeImage = (image, filename) => {
     .toBuffer();
 };
 
-
+export const getImageMeta = (image) => {
+  return sharp(image).metadata()
+    .then((meta) => {
+      return meta;
+    });
+};
