@@ -68,7 +68,6 @@ export const refreshToken = async (parent, args, context, info) => {
 
   // re-create token
   const newToken = createToken(userId);
-  console.log(newToken);
 
   // get user
   const user = await context.models.User.getById(userId);

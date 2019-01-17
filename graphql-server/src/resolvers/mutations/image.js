@@ -3,7 +3,7 @@ import { handleAuth } from '../../auth';
 export const addImage = async (parent, args, context, info) => {
   handleAuth(context);
 
-  const { file, name, type, analyse } = await args.input;
+  const { file, id, name, type, analyse } = await args.input;
 
   // parallel upload
   const uploadResult = await Promise.all([
@@ -34,13 +34,13 @@ export const addImage = async (parent, args, context, info) => {
 
   // create and store image
   const imageInput = {
+    id,
     name,
     type,
     faces,
     labels,
     meta,
   };
-  console.log(imageInput);
   const image = await context.models.Image.createImage(imageInput);
 
   return {

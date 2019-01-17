@@ -54,7 +54,6 @@ export const autorotateImage = (data) => {
             console.log('Orientation was: ' + orientation);
             resolve(buffer);
         } else if (error.code === 'no_orientation' || error.code === 'correct_orientation') {
-            console.log('no rotation needed');
             resolve(buffer);
         } else {
             console.log(error);

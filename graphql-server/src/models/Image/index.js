@@ -48,8 +48,8 @@ class Image extends RootModel {
 
   async createImage(input) {
     const newImage = {
-      ...input,
       id: uuid.v4(),
+      ...input,
       user_id: this.loggedInUserId(),
       created: new Date().toISOString(),
     }
