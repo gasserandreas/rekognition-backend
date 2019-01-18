@@ -13,6 +13,7 @@ const generateTypeDefs = gql => gql`
     loginUser(input: LoginUserInput!): UserAuthPayload
     refreshToken(input: TokenRefreshInput!): UserAuthPayload
     addImage(input: AddImageInput!): AddImagePayload
+    updateUser(input: UpdateUserInput!): UserPayload
   }
 
   # mutation payloads
@@ -35,6 +36,16 @@ const generateTypeDefs = gql => gql`
     firstname: String!
     lastname: String!
     email: String!
+  }
+
+  type UserPayload {
+    user: User!
+  }
+
+  input UpdateUserInput {
+    firstname: String!
+    lastname: String!
+    # email: String!
   }
 
   # Auth definitions

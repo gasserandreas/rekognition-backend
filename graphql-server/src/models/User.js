@@ -13,6 +13,8 @@ class User extends RootModel {
         ':userId': id,
       },
     };
+
+    console.log('getById');
   
     const response = await this.DynamoClient.query(params);
 
@@ -64,6 +66,45 @@ class User extends RootModel {
 
     try {
       await this.DynamoClient.put(params);
+      return newUser;
+    } catch (error) {
+      console.log(error);
+      return null;
+    }
+  }
+
+  async updateUser(input) {
+    const id = this.loggedInUserId()
+
+    const user = await this.getById(id);
+
+    if (!user) {
+      return null;
+    }
+
+    const newUser = {
+      ...user,
+      firstname: input.firstname,
+      lastname: input.lastname,
+      // email: input.email,
+    };
+
+    const params = {
+      TableName: this.DynamoClient.Tables.USER,
+      Key:{
+        id,
+      },
+      // UpdateExpression: 'set firstname = :f, lastname = :l, email = :e',
+      UpdateExpression: 'set firstname = :f, lastname = :l',
+      ExpressionAttributeValues: {
+        ':f': newUser.firstname,
+        ':l': newUser.lastname,
+        // ':e': newUser.email,
+      },
+    };
+
+    try {
+      await this.DynamoClient.update(params);
       return newUser;
     } catch (error) {
       console.log(error);
