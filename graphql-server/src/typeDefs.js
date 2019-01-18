@@ -5,14 +5,13 @@ const generateTypeDefs = gql => gql`
     getUserInfo(user_id: ID!): User
     getImage(image_id: ID!): Image
     listImage(limit: Int, nextToken: String): ImageConnection!
+    emailInUse(input: EmailInUseInput!): Boolean
   }
 
   type Mutation {
-    empty: String
     signUpUser(input: SignUpUserInput!): UserAuthPayload
     loginUser(input: LoginUserInput!): UserAuthPayload
     refreshToken(input: TokenRefreshInput!): UserAuthPayload
-    emailInUse(input: EmailInUseInput!): Boolean
     addImage(input: AddImageInput!): AddImagePayload
   }
 
