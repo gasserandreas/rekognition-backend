@@ -6,9 +6,10 @@ import ImageModel from './models/Image';
 
 import resolvers from './resolvers';
 
-import DynamoFactory, { generateDynamoTables } from './dynamo';
+import DynamoFactory from './dynamo';
 import AwsFactory from './aws';
 
+import { splitJsonStringToObject } from './util';
 import { getAuthorizationUserId } from './auth';
 
 // load .env vars
@@ -18,13 +19,15 @@ dotenv.config();
 const {
   NODE_ENV,
   DYNAMODB_TABLE_NAMES,
+  S3_IMAGE_BUCKETS,
   AWS_DEFAULT_REGION,
   AWS_DEFAULT_ACCESS_KEY_ID,
   AWS_DEFAULT_SECRET_ACCESS_KEY,
 } = process.env;
 
 // translate vars into dynamo table config
-const dynamoTables = generateDynamoTables(DYNAMODB_TABLE_NAMES);
+const dynamoTables = splitJsonStringToObject(DYNAMODB_TABLE_NAMES);
+const buckets = splitJsonStringToObject(S3_IMAGE_BUCKETS);
 
 const dynamoConfig = {
   ...NODE_ENV === 'local' ? {
@@ -73,9 +76,10 @@ export const generateServer = (Server, gql, local = false) => new Server({
           secretAccessKey: AWS_DEFAULT_SECRET_ACCESS_KEY,
           region: AWS_DEFAULT_REGION,
         },
+        buckets,
       });
     } else {
-      AwsClient = new AwsFactory();
+      AwsClient = new AwsFactory({ buckets });
     }
     
     const models = {

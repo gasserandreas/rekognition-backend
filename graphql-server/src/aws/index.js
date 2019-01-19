@@ -6,7 +6,7 @@ class AwsFactory {
     awsConfig: null,
     buckets: [],
   }) {
-    const { local, awsConfig } = options;
+    const { local, awsConfig, buckets } = options;
 
     if (!AWS) {
       throw new Error('Could not initialize AWS');
@@ -22,10 +22,7 @@ class AwsFactory {
     }
 
     // save bucket names
-    this.BucketsNames = {
-      IMAGE: '529821714029-rekognition-backend-dev-image-bucket',
-      THUMB: '529821714029-rekognition-backend-dev-thumb-bucket',
-    };
+    this.BucketsNames = buckets;
 
     // set internal pointers
     this.buckets = [];
