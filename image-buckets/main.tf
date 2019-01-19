@@ -108,7 +108,7 @@ output "image_bucket_name" {
   value = "${module.image_bucket.bucket_name}"
 }
 
-output "thumbs_bucket_iam_policy_json" {
+output "thumb_bucket_iam_policy_json" {
   value = "${data.aws_iam_policy_document.s3_acccess_thumb_bucket.json}"
 }
 

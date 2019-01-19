@@ -13,8 +13,6 @@ class User extends RootModel {
         ':userId': id,
       },
     };
-
-    console.log('getById');
   
     const response = await this.DynamoClient.query(params);
 

@@ -157,5 +157,5 @@ output "invoke_url" {
 }
 
 output "graphql_lambda_role_name" {
-  value = "${lambda_role.name}"
+  value = "${aws_iam_role.lambda_role.name}"
 }
