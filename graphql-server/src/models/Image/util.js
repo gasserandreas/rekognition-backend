@@ -1,5 +1,5 @@
 import jo from 'jpeg-autorotate';
-// import sharp from 'sharp';
+import sharp from 'sharp';
 
 // data mappers
 export const mapBoundinBox = ({ Width, Height, Left, Top }) => ({
@@ -65,32 +65,32 @@ export const autorotateImage = (data) => {
   });
 };
 
-// export const resizeImage = (image, filename) => {
-//   const MAX_WIDTH  = 1000;
-//   const MAX_HEIGHT = 1000;
+export const resizeImage = (image, filename) => {
+  const MAX_WIDTH  = 1000;
+  const MAX_HEIGHT = 1000;
 
-//   const typeMatch = filename.match(/\.([^.]*)$/);
-//   if (!typeMatch) {
-//     const error = `unable to infer image type for key ${filename}`;
-//     reject(error);
-//   }
+  const typeMatch = filename.match(/\.([^.]*)$/);
+  if (!typeMatch) {
+    const error = `unable to infer image type for key ${filename}`;
+    reject(error);
+  }
     
-//   const imageType = typeMatch[1];
-//   if (imageType !== "jpg" && imageType !== "png" && imageType !== 'jpeg') {
-//     const error = `skipping non-image ${filename}`;
-//     reject(error);
-//   }
+  const imageType = typeMatch[1];
+  if (imageType !== "jpg" && imageType !== "png" && imageType !== 'jpeg') {
+    const error = `skipping non-image ${filename}`;
+    reject(error);
+  }
 
-//   return sharp(image)
-//     .resize(MAX_WIDTH, MAX_HEIGHT, {
-//       fit: 'inside',
-//     })
-//     .toBuffer();
-// };
+  return sharp(image)
+    .resize(MAX_WIDTH, MAX_HEIGHT, {
+      fit: 'inside',
+    })
+    .toBuffer();
+};
 
-// export const getImageMeta = (image) => {
-//   return sharp(image).metadata()
-//     .then((meta) => {
-//       return meta;
-//     });
-// };
+export const getImageMeta = (image) => {
+  return sharp(image).metadata()
+    .then((meta) => {
+      return meta;
+    });
+};

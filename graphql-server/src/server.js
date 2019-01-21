@@ -36,13 +36,6 @@ const dynamoConfig = {
   } : {},
 };
 
-// configure resolvers and graphql server
-// const resolvers = {
-//   Query: QueryResolver,
-//   Mutation: MutationResolver,
-//   Image: ImageResolver,
-// };
-
 export const generateServer = (Server, gql, local = false) => new Server({
   typeDefs: generateTypeDefs(gql),
   resolvers,
@@ -66,7 +59,7 @@ export const generateServer = (Server, gql, local = false) => new Server({
     // initialize data access
     const DynamoClient = new DynamoFactory(dynamoTables, dynamoConfig)
 
-    // initialize AWS access
+    // // initialize AWS access
     let AwsClient;
     if (local) {
       AwsClient = new AwsFactory({

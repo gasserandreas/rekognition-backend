@@ -8,8 +8,8 @@ import {
   mapEmotions,
   mapAge,
   autorotateImage,
-  // resizeImage,
-  // getImageMeta,
+  resizeImage,
+  getImageMeta,
 } from './util';
 
 import { Orientation } from '../TypeDefs';
@@ -80,7 +80,9 @@ class Image extends RootModel {
     const s3ImagePath = this.getS3ImagePath(name);
 
     // create buffer from received buffer content
-    const buffer = new Buffer(file);
+    // const buffer = new Buffer(file);
+
+    const buffer = file;
     
     // upload image
     return this.AwsClient.uploadImageToS3(bucketName, s3ImagePath, type, buffer)
@@ -100,11 +102,13 @@ class Image extends RootModel {
     const s3ImagePath = this.getS3ImagePath(name);
 
     // create buffer from received buffer content
-    const buffer = new Buffer(file);
+    // const buffer = new Buffer(file);
+
+    const buffer = file;
 
     try {
       // rotate image
-      const rotatedImage = await autorotateImage(buffer);
+      // const rotatedImage = await autorotateImage(buffer);
 
       // resize image
       // const resizedImage = await resizeImage(rotatedImage, name);
@@ -186,37 +190,37 @@ class Image extends RootModel {
     // create buffer from received buffer content
     const buffer = new Buffer(file);
 
-    return {
-      size: 1000,
-      width: 1000,
-      height: 500,
-      density: 0,
-      type: 'jpeg',
-      orientation: Orientation.LANDSCAPE,
-    };
-    // try {
-    //   const meta = await getImageMeta(buffer);
+    // return {
+    //   size: 1000,
+    //   width: 1000,
+    //   height: 500,
+    //   density: 0,
+    //   type: 'jpeg',
+    //   orientation: Orientation.LANDSCAPE,
+    // };
+    try {
+      const meta = await getImageMeta(buffer);
 
-    //   const {
-    //     size,
-    //     width,
-    //     height,
-    //     density,
-    //     format,
-    //   } = meta;
+      const {
+        size,
+        width,
+        height,
+        density,
+        format,
+      } = meta;
 
-    //   return {
-    //     size,
-    //     width,
-    //     height,
-    //     density,
-    //     type: format,
-    //     orientation: width >= height ? Orientation.LANDSCAPE : Orientation.PORTRAIT,
-    //   };
-    // } catch (error) {
-    //   console.log(error);
-    //   return {};
-    // }
+      return {
+        size,
+        width,
+        height,
+        density,
+        type: format,
+        orientation: width >= height ? Orientation.LANDSCAPE : Orientation.PORTRAIT,
+      };
+    } catch (error) {
+      console.log(error);
+      return {};
+    }
   }
 }
 
