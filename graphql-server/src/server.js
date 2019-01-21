@@ -19,7 +19,7 @@ dotenv.config();
 const {
   NODE_ENV,
   DYNAMODB_TABLE_NAMES,
-  S3_IMAGE_BUCKETS,
+  S3_BUCKET_NAMES,
   AWS_DEFAULT_REGION,
   AWS_DEFAULT_ACCESS_KEY_ID,
   AWS_DEFAULT_SECRET_ACCESS_KEY,
@@ -27,7 +27,7 @@ const {
 
 // translate vars into dynamo table config
 const dynamoTables = splitJsonStringToObject(DYNAMODB_TABLE_NAMES);
-const buckets = splitJsonStringToObject(S3_IMAGE_BUCKETS);
+const buckets = splitJsonStringToObject(S3_BUCKET_NAMES);
 
 const dynamoConfig = {
   ...NODE_ENV === 'local' ? {
