@@ -8,8 +8,8 @@ import {
   mapEmotions,
   mapAge,
   autorotateImage,
-  resizeImage,
-  getImageMeta,
+  // resizeImage,
+  // getImageMeta,
 } from './util';
 
 import { Orientation } from '../TypeDefs';
@@ -107,10 +107,11 @@ class Image extends RootModel {
       const rotatedImage = await autorotateImage(buffer);
 
       // resize image
-      const resizedImage = await resizeImage(rotatedImage, name);
+      // const resizedImage = await resizeImage(rotatedImage, name);
 
       // upload to S3
-      return this.AwsClient.uploadImageToS3(bucketName, s3ImagePath, type, resizedImage)
+      // return this.AwsClient.uploadImageToS3(bucketName, s3ImagePath, type, resizedImage)
+      return this.AwsClient.uploadImageToS3(bucketName, s3ImagePath, type, buffer)
         .then(() => {
           return {
             uploadPath: s3ImagePath,
@@ -185,29 +186,37 @@ class Image extends RootModel {
     // create buffer from received buffer content
     const buffer = new Buffer(file);
 
-    try {
-      const meta = await getImageMeta(buffer);
+    return {
+      size: 1000,
+      width: 1000,
+      height: 500,
+      density: 0,
+      type: 'jpeg',
+      orientation: Orientation.LANDSCAPE,
+    };
+    // try {
+    //   const meta = await getImageMeta(buffer);
 
-      const {
-        size,
-        width,
-        height,
-        density,
-        format,
-      } = meta;
+    //   const {
+    //     size,
+    //     width,
+    //     height,
+    //     density,
+    //     format,
+    //   } = meta;
 
-      return {
-        size,
-        width,
-        height,
-        density,
-        type: format,
-        orientation: width >= height ? Orientation.LANDSCAPE : Orientation.PORTRAIT,
-      };
-    } catch (error) {
-      console.log(error);
-      return {};
-    }
+    //   return {
+    //     size,
+    //     width,
+    //     height,
+    //     density,
+    //     type: format,
+    //     orientation: width >= height ? Orientation.LANDSCAPE : Orientation.PORTRAIT,
+    //   };
+    // } catch (error) {
+    //   console.log(error);
+    //   return {};
+    // }
   }
 }
 

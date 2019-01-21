@@ -2,7 +2,7 @@ import generateTypeDefs from './typeDefs';
 import dotenv from 'dotenv';
 
 import UserModel from './models/User';
-import ImageModel from './models/Image';
+import ImageModel from './models/Image/image';
 
 import resolvers from './resolvers';
 
