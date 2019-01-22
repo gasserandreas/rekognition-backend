@@ -65,6 +65,14 @@ export const autorotateImage = (data) => {
   });
 };
 
+export const convertBase64ToImageBuffer = async (file) => {
+  const image = sharp(file);
+
+  return image
+    .withMetadata()
+    .toBuffer();
+}
+
 export const resizeImage = (image, filename) => {
   const MAX_WIDTH  = 1000;
   const MAX_HEIGHT = 1000;

@@ -4,8 +4,8 @@ export const addImage = async (parent, args, context, info) => {
   handleAuth(context);
   const { file: rawFileStr, id, name, type, analyse } = await args.input;
 
-  const fileStr = rawFileStr.replace(/^data:image\/\w+;base64,/, '');
-  const file = Buffer.from(fileStr, 'base64');
+  // convert to image file
+  const file = await context.models.Image.convertToImage(rawFileStr);
 
   // parallel upload
   const uploadResult = await Promise.all([
@@ -28,8 +28,6 @@ export const addImage = async (parent, args, context, info) => {
       context.models.Image.detectFaces(uploadPath),
       context.models.Image.detectImageMeta(file),
     ]);
-
-    console.log(rekognitionResults);
 
     labels = rekognitionResults[0];
     faces = rekognitionResults[1];
