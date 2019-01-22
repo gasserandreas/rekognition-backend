@@ -1,6 +1,6 @@
 # Backend for AWS Rekognition
 
-Used AWS services:
+**Used AWS services:**
 - AWS Gateway: API backend resource
 - DNS: Use external DNS / HTTPS configuration
 - S3 Buckets: Define thumb and image file
@@ -9,13 +9,14 @@ Used AWS services:
 ## Getting started
 
 ### Installation
-This packages uses following external development dependencies:
+Following packages are used in development environment:
 - localstack
 - node8 & npm 6
 - git
 - Terraform
 - VisualStudio Code
 
+**Installation steps**
 1. Make sure external development dependencies are installed (see above)
 2. Clone this repo if not yet done
 3. Setup AWS credentials account by using profiled accounts: https://docs.aws.amazon.com/cli/latest/userguide/cli-configure-profiles.html
