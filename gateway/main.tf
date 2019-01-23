@@ -116,6 +116,12 @@ resource "aws_iam_role_policy" "dynamo_log_group_policy" {
   policy = "${data.aws_iam_policy_document.dynamo_access.json}"
 }
 
+# attach rekognition access to lambda role
+resource "aws_iam_role_policy_attachment" "lambda_rekognition_full_access_attach" {
+  role   = "${aws_iam_role.lambda_role.name}"
+  policy_arn = "arn:aws:iam::aws:policy/AmazonRekognitionFullAccess"
+}
+
 # S3 buckets access
 
 # attach s3 policy to role for bucket: bucket-a
