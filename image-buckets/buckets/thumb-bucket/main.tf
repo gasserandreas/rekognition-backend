@@ -13,17 +13,17 @@ resource "aws_s3_bucket" "thumb_bucket" {
   lifecycle_rule = [
     {
       enabled = true
-      id      = "retire exports after 30 days"
+      id      = "retire exports after 180 days"
 
       noncurrent_version_expiration = [
         {
-          days = 30
+          days = 180
         },
       ]
 
       expiration = [
         {
-          days = 30
+          days = 180
         },
       ]
     },
@@ -31,7 +31,7 @@ resource "aws_s3_bucket" "thumb_bucket" {
 
   cors_rule = {
     allowed_headers = ["*"]
-    allowed_methods = ["GET"]
+    allowed_methods = ["GET", "DELETE"]
     allowed_origins = ["*", "http://*", "https://*"]
     expose_headers  = ["ETag"]
     max_age_seconds = 3000
@@ -47,6 +47,19 @@ resource "aws_s3_bucket" "thumb_bucket" {
       "Effect":"Allow",
       "Principal": "*",
       "Action":["s3:GetObject"],
+      "Resource":["arn:aws:s3:::${var.account_id}-${var.app_name}-thumb-bucket/*"]
+    },
+    {
+      "Sid": "AddWritePerm",
+      "Effect": "Allow",
+      "Principal": {
+        "AWS": "arn:aws:iam::${var.account_id}:user/aws-rekognition-frontend"
+      },
+      "Action": [
+        "s3:DeleteObject",
+        "s3:PutObject",
+        "s3:GetObject"
+      ],
       "Resource":["arn:aws:s3:::${var.account_id}-${var.app_name}-thumb-bucket/*"]
     }
   ]

@@ -13,17 +13,17 @@ resource "aws_s3_bucket" "image_bucket" {
   lifecycle_rule = [
     {
       enabled = true
-      id      = "retire exports after 30 days"
+      id      = "retire exports after 180 days"
 
       noncurrent_version_expiration = [
         {
-          days = 30
+          days = 180
         },
       ]
 
       expiration = [
         {
-          days = 30
+          days = 180
         },
       ]
     },
@@ -31,7 +31,7 @@ resource "aws_s3_bucket" "image_bucket" {
 
   cors_rule = {
     allowed_headers = ["*"]
-    allowed_methods = ["GET", "PUT", "POST"]
+    allowed_methods = ["GET", "DELETE", "PUT", "POST"]
     allowed_origins = ["*", "http://*", "https://*"]
     expose_headers  = ["ETag"]
     max_age_seconds = 3000
@@ -56,6 +56,7 @@ resource "aws_s3_bucket" "image_bucket" {
         "AWS": "arn:aws:iam::${var.account_id}:user/aws-rekognition-frontend"
       },
       "Action": [
+        "s3:DeleteObject",
         "s3:PutObject",
         "s3:GetObject"
       ],

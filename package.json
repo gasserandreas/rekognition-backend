@@ -1,0 +1,25 @@
+{
+  "name": "rekognition-backend",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "apply-local": "terraform workspace select local && terraform apply -auto-approve -var-file=\"terraform.local.tfvars\"",
+    "apply-dev": "terraform workspace select dev && terraform apply -auto-approve -var-file=\"terraform.dev.tfvars\"",
+    "apply-test": "terraform workspace select test && terraform apply -auto-approve -var-file=\"terraform.test.tfvars\"",
+    "apply-prod": "terraform workspace select default && terraform apply -auto-approve -var-file=\"terraform.prod.tfvars\"",
+    "localstack": "localstack start",
+    "localstack-init": ". init-localstack.sh"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/gasserandreas/rekognition-backend.git"
+  },
+  "author": "Andreas Gasser",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/gasserandreas/rekognition-backend/issues"
+  },
+  "homepage": "https://github.com/gasserandreas/rekognition-backend#readme",
+  "dependencies": {}
+}
