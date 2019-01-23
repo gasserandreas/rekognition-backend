@@ -1,0 +1,12 @@
+{
+  "name": "graphql-server",
+  "version": "1.0.0",
+  "main": "index.js",
+  "author": "Andreas Gasser",
+  "license": "UNLICENSED",
+  "scripts": {},
+  "devDependencies": {},
+  "dependencies": {
+    "sharp": "^0.21.0"
+  }
+}

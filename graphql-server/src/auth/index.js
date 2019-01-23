@@ -1,5 +1,14 @@
-import { AuthenticationError as AuthenticationErrorLocal } from 'apollo-server'
-import { AuthenticationError as AuthenticationErrorLambda } from 'apollo-server-lambda'
+import {
+  AuthenticationError as AuthenticationErrorLocal,
+  UserInputError as UserInputErrorLocal,
+  ValidationError as ValidationErrorLocal,
+} from 'apollo-server'
+
+import {
+  AuthenticationError as AuthenticationErrorLambda,
+  UserInputError as UserInputErrorLambda,
+  ValidationError as ValidationErrorLambda,
+} from 'apollo-server-lambda'
 
 import jwt from 'jsonwebtoken';
 import bcrypt from 'bcryptjs';
@@ -9,8 +18,12 @@ import dotenv from 'dotenv';
 dotenv.config();
 
 // jwt token related functions
-export function creatToken(userId) {
-  return jwt.sign({ userId }, process.env.APP_SECRET);
+export function createToken(userId) {
+  const obj = {
+    userId,
+    createdAt: Date.now(),
+  };
+  return jwt.sign(obj, process.env.APP_SECRET);
 }
 
 export function getAuthorizationUserId(authorization) {
@@ -18,11 +31,15 @@ export function getAuthorizationUserId(authorization) {
     return null;
   }
 
+  const token = authorization.replace('Bearer ', '');
+  return getUserIdFromToken(token);
+}
+
+export function getUserIdFromToken(token) {
   const {
     APP_SECRET
   } = process.env;
 
-  const token = authorization.replace('Bearer ', '');
   try {
     const { userId } = jwt.verify(token, APP_SECRET);
     return userId;
@@ -37,8 +54,8 @@ export async function createHash(str) {
   return bcrypt.hash(str, 10);
 }
 
-export async function compareHashes(hashA, hashB) {
-  return bcrypt.compare(hashA, hashB)
+export async function compareHashes(password, hash) {
+  return bcrypt.compare(password, hash);
 }
 
 export function isAuthenticated(context) {
@@ -55,6 +72,16 @@ export function isAuthenticated(context) {
 export function createAuthError(message) {
   const AuthError = AuthenticationErrorLocal || AuthenticationErrorLambda;
   return new AuthError(message);
+}
+
+export function createUserInputError(message) {
+  const UserInputError = UserInputErrorLocal || UserInputErrorLambda;
+  return new UserInputError(message);
+}
+
+export function createValidationError(message) {
+  const ValidationError = ValidationErrorLocal || ValidationErrorLambda;
+  return new ValidationError(message);
 }
 
 export function handleAuth(context) {

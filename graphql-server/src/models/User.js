@@ -70,6 +70,45 @@ class User extends RootModel {
       return null;
     }
   }
+
+  async updateUser(input) {
+    const id = this.loggedInUserId()
+
+    const user = await this.getById(id);
+
+    if (!user) {
+      return null;
+    }
+
+    const newUser = {
+      ...user,
+      firstname: input.firstname,
+      lastname: input.lastname,
+      // email: input.email,
+    };
+
+    const params = {
+      TableName: this.DynamoClient.Tables.USER,
+      Key:{
+        id,
+      },
+      // UpdateExpression: 'set firstname = :f, lastname = :l, email = :e',
+      UpdateExpression: 'set firstname = :f, lastname = :l',
+      ExpressionAttributeValues: {
+        ':f': newUser.firstname,
+        ':l': newUser.lastname,
+        // ':e': newUser.email,
+      },
+    };
+
+    try {
+      await this.DynamoClient.update(params);
+      return newUser;
+    } catch (error) {
+      console.log(error);
+      return null;
+    }
+  }
 }
 
 export default User;

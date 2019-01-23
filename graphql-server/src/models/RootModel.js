@@ -1,6 +1,7 @@
 class RootModel {
-  constructor({ DynamoClient, auth }) {
+  constructor({ DynamoClient, AwsClient, auth }) {
     this.DynamoClient = DynamoClient;
+    this.AwsClient = AwsClient;
     this.auth = auth;
   }
 

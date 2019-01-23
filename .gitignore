@@ -7,6 +7,7 @@
 
 # .tfvars files
 *.tfvars
+!terraform.environment.example.tfvars
 
 # node_modules
 **/node_modules/

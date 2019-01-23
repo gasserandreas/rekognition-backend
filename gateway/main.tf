@@ -9,7 +9,14 @@ variable "certificate_arn" {}
 variable "dynamodb_table_names" {
   type        = "list"
 }
+variable "s3_bucket_names" {
+  type        = "list"
+}
 variable "auth_app_secret" {}
+
+variable "image_bucket_iam_policy_json" {}
+
+variable "thumb_bucket_iam_policy_json" {}
 
 # create api
 resource "aws_api_gateway_rest_api" "api" {
@@ -37,6 +44,7 @@ module "resource_graphql" {
   lambda_role   = "${aws_iam_role.lambda_role.arn}"
 
   dynamodb_table_names = "${var.dynamodb_table_names}"
+  s3_bucket_names = "${var.s3_bucket_names}"
   auth_app_secret = "${var.auth_app_secret}"
 }
 
@@ -108,6 +116,29 @@ resource "aws_iam_role_policy" "dynamo_log_group_policy" {
   policy = "${data.aws_iam_policy_document.dynamo_access.json}"
 }
 
+# attach rekognition access to lambda role
+resource "aws_iam_role_policy_attachment" "lambda_rekognition_full_access_attach" {
+  role   = "${aws_iam_role.lambda_role.name}"
+  policy_arn = "arn:aws:iam::aws:policy/AmazonRekognitionFullAccess"
+}
+
+# S3 buckets access
+
+# attach s3 policy to role for bucket: bucket-a
+resource "aws_iam_role_policy" "lambda_s3_access_thumb_bucket" {
+  name   = "${var.app_name}_lambda_s3_bucket_access_thumb_bucket"
+  role   = "${aws_iam_role.lambda_role.name}"
+  # role   = "${aws_iam_role.iam_for_lambda.name}"
+  policy = "${var.thumb_bucket_iam_policy_json}"
+}
+
+resource "aws_iam_role_policy" "lambda_s3_access_image_bucket" {
+  name   = "${var.app_name}_lambda_s3_bucket_access_image_bucket"
+  role   = "${aws_iam_role.lambda_role.name}"
+  # role   = "${aws_iam_role.iam_for_lambda.name}"
+  policy = "${var.image_bucket_iam_policy_json}"
+}
+
 # deploy api
 resource "aws_api_gateway_deployment" "deployment" {
   depends_on = [
@@ -129,4 +160,8 @@ resource "aws_api_gateway_base_path_mapping" "path_mapping" {
 # output api
 output "invoke_url" {
   value = "${aws_api_gateway_deployment.deployment.invoke_url}"
+}
+
+output "graphql_lambda_role_name" {
+  value = "${aws_iam_role.lambda_role.name}"
 }

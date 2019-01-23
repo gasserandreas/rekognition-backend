@@ -1,8 +1,11 @@
 import {
-  creatToken,
+  createToken,
   createHash,
   compareHashes,
   createAuthError,
+  createValidationError,
+  createUserInputError,
+  getUserIdFromToken,
 } from '../../auth';
 
 export const signUpUser = async (parent, args, context, info) => {
@@ -12,17 +15,17 @@ export const signUpUser = async (parent, args, context, info) => {
   // check if user is already in system
   const user = await context.models.User.getByEmail(email);
   if (user) {
-    throw new Error('Email is already registered');
+    throw new createValidationError('Email is already registered');
   }
 
   // create new user
   const newUser = await context.models.User.createUser(input);
   if (!newUser) {
-    throw createAuthError('Could not register user');
+    throw new createValidationError('Could not register user');
   }
 
   // create token
-  const token = creatToken(newUser.id);
+  const token = createToken(newUser.id);
 
   return {
     token,
@@ -38,19 +41,43 @@ export const loginUser = async (parent, args, context, info) => {
   const user = await context.models.User.getByEmail(email);
 
   if (!user) {
-    throw createAuthError('Could not login user')
+    throw createValidationError('Could not login user')
   }
 
   // validate password
-  if (!compareHashes(user.password, await createHash(password))) {
-    throw createAuthError('Could not login user')
+  if (! await compareHashes(password, user.password)) {
+    throw createValidationError('Could not login user')
   }
   
   // create token
-  const token = creatToken(user.id);
+  const token = createToken(user.id);
 
   return {
     token,
+    user,
+  };
+};
+
+export const refreshToken = async (parent, args, context, info) => {
+  const { input } = args;
+  const { token, userId } = input;
+
+  if(userId !== getUserIdFromToken(token)) {
+    throw createAuthError('Invalid token, userId combination');
+  }
+
+  // re-create token
+  const newToken = createToken(userId);
+
+  // get user
+  const user = await context.models.User.getById(userId);
+
+  if (!user) {
+    throw createAuthError('Invalid token, userId combination');
+  }
+
+  return {
+    token: newToken,
     user,
   };
 };

@@ -20,5 +20,6 @@
   "bugs": {
     "url": "https://github.com/gasserandreas/rekognition-backend/issues"
   },
-  "homepage": "https://github.com/gasserandreas/rekognition-backend#readme"
+  "homepage": "https://github.com/gasserandreas/rekognition-backend#readme",
+  "dependencies": {}
 }

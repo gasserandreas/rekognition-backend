@@ -7,6 +7,9 @@ variable "lambda_role" {}
 variable "dynamodb_table_names" {
   type        = "list"
 }
+variable "s3_bucket_names" {
+  type        = "list"
+}
 variable "auth_app_secret" {}
 
 
@@ -63,7 +66,7 @@ resource "aws_api_gateway_integration_response" "options_integration_response_gr
   status_code = "${aws_api_gateway_method_response.options_200_graph.status_code}"
 
   response_parameters = {
-    "method.response.header.Access-Control-Allow-Headers" = "'Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token', 'X-Apollo-Tracing'"
+    "method.response.header.Access-Control-Allow-Headers" = "'Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token','X-Apollo-Tracing'"
     "method.response.header.Access-Control-Allow-Methods" = "'POST,GET,PUT,DELETE,OPTIONS'"
     "method.response.header.Access-Control-Allow-Origin"  = "'*'"
   }
@@ -123,5 +126,6 @@ module "graph_lambda" {
   resource_path  = "${aws_api_gateway_resource.graph.path}"
 
   dynamodb_table_names = "${var.dynamodb_table_names}"
+  s3_bucket_names="${var.s3_bucket_names}"
   auth_app_secret = "${var.auth_app_secret}"
 }

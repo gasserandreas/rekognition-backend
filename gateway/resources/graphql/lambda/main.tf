@@ -9,6 +9,9 @@ variable "resource_path" {}
 variable "dynamodb_table_names" {
   type        = "list"
 }
+variable "s3_bucket_names" {
+  type        = "list"
+}
 variable "auth_app_secret" {}
 
 resource "aws_lambda_function" "post_lambda" {
@@ -24,6 +27,7 @@ resource "aws_lambda_function" "post_lambda" {
   environment {
     variables {
       DYNAMODB_TABLE_NAMES = "${jsonencode(var.dynamodb_table_names)}"
+      S3_BUCKET_NAMES = "${jsonencode(var.s3_bucket_names)}"
       APP_SECRET = "${var.auth_app_secret}"
     }
   }

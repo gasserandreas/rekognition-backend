@@ -28,20 +28,18 @@ module "gateway" {
   route53_zone_id = "${var.hosted_zone_id}"
   certificate_arn = "${var.aws_certificate_arn}"
   auth_app_secret = "${var.auth_app_secret}"
+  image_bucket_iam_policy_json = "${module.image_buckets.image_bucket_iam_policy_json}"
+  thumb_bucket_iam_policy_json = "${module.image_buckets.thumb_bucket_iam_policy_json}"
 
   dynamodb_table_names = [
     "{IMAGE:${module.dynamo_table_image.name}}",
     "{USER:${module.dynamo_table_user.name}}",
   ]
-}
 
-# disable on local
-module "image-buckets" {
-  source = "./image-buckets"
-
-  app_region = "${var.app_region}"
-  account_id = "${var.account_id}"
-  app_name   = "${var.app_name}"
+  s3_bucket_names = [
+    "{IMAGE:${module.image_buckets.image_bucket_name}}",
+    "{THUMB:${module.image_buckets.thumb_bucket_name}}",
+  ]
 }
 
 # # enable on loocal
@@ -66,6 +64,15 @@ module "image-buckets" {
 #     cloudwatch="http://localhost:4582",
 #   }
 # }
+
+# disable on local
+module "image_buckets" {
+  source = "./image-buckets"
+
+  app_region = "${var.app_region}"
+  account_id = "${var.account_id}"
+  app_name   = "${var.app_name}"
+}
 
 module "dynamo_table_image" {
   source = "./dynamo/image"

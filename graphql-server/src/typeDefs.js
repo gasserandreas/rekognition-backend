@@ -1,3 +1,4 @@
+// import { gql } from 'apollo-server';
 
 const generateTypeDefs = gql => gql`
   type Query {
@@ -5,27 +6,18 @@ const generateTypeDefs = gql => gql`
     getUserInfo(user_id: ID!): User
     getImage(image_id: ID!): Image
     listImage(limit: Int, nextToken: String): ImageConnection!
+    emailInUse(input: EmailInUseInput!): Boolean
   }
 
   type Mutation {
-    empty: String
+    empty(input: String!): String!
     signUpUser(input: SignUpUserInput!): UserAuthPayload
     loginUser(input: LoginUserInput!): UserAuthPayload
+    refreshToken(input: TokenRefreshInput!): UserAuthPayload
     addImage(input: AddImageInput!): AddImagePayload
-    addFacesToImage(input: AddFacesToImageInput!): AddFacesToImagePayload
-    addLabelsToImage(input: AddLabelsToImageInput!): AddLabelsToImagePayload
+    updateUser(input: UpdateUserInput!): UserPayload
   }
 
-  # mutation input definitions
-  input AddFacesToImageInput {
-    faces: [FaceInput]!
-    image_id: ID!
-  }
-
-  input AddLabelsToImageInput {
-    labels: [LabelInput]!
-    image_id: ID!
-  }
 
   # mutation payloads
   type UserAuthPayload {
@@ -35,14 +27,6 @@ const generateTypeDefs = gql => gql`
 
   type AddImagePayload {
     image: Image
-  }
-
-  type AddFacesToImagePayload {
-    image: Image!
-  }
-
-  type AddLabelsToImagePayload {
-    image: Image!
   }
 
   # --------------------
@@ -55,6 +39,16 @@ const generateTypeDefs = gql => gql`
     firstname: String!
     lastname: String!
     email: String!
+  }
+
+  type UserPayload {
+    user: User!
+  }
+
+  input UpdateUserInput {
+    firstname: String!
+    lastname: String!
+    # email: String!
   }
 
   # Auth definitions
@@ -70,6 +64,15 @@ const generateTypeDefs = gql => gql`
     password: String!
   }
 
+  input TokenRefreshInput {
+    token: String!
+    userId: String!
+  }
+
+  input EmailInUseInput {
+    email: String!
+  }
+
   # image definitions
   type ImageConnection {
     items: [Image]!
@@ -78,32 +81,34 @@ const generateTypeDefs = gql => gql`
 
   type Image {
     id: ID!
+    name: String!
     path: String!
-    type: String!
     created: String!
-    faces: [Face]!
-    labels: [Label]!
+    faces: FacePayload
+    labels: LabelPayload
+    meta: Meta!
   }
 
   input AddImageInput {
-    path: String!
+    id: ID
+    # file: Upload!
+    file: String!
+    name: String!
     type: String!
+    analyse: Boolean
   }
 
   # face definitions
-  type Face {
-    id: ID!
-    position: BoundingBox!
-    age: FaceAge!
-    emotions: [Attribute]!
-    attributes: [Attribute]!
+  type FacePayload {
+    items: [Face]!
   }
 
-  input FaceInput {
-    position: BoundingBoxInput
-    age: FaceAgeInput!
-    emotions: [AttributeInput!]!
-    attributes: [AttributeInput]!
+  type Face {
+    id: ID!
+    position: BoundingBox
+    age: FaceAge
+    emotions: [Attribute]!
+    attributes: [Attribute]!
   }
 
   type FaceAge {
@@ -111,12 +116,11 @@ const generateTypeDefs = gql => gql`
     low: Float!
   }
 
-  input FaceAgeInput {
-    high: Float!
-    low: Float!
+  # # label definitions
+  type LabelPayload {
+    items: [Label]!
   }
 
-  # label definitions
   type Label {
     id: ID!
     name: String!
@@ -125,24 +129,22 @@ const generateTypeDefs = gql => gql`
     instances: [BoundingBox]!
   }
 
-  input LabelInput {
-    name: String!
-    confidence: Float!
-    parents: [String]!
-    instances: [BoundingBoxInput]!
+  type Meta {
+    type: String!
+    orientation: Orientation!
+    size: Float!
+    width: Float!
+    height: Float!
+    density: Float
+    numberOfFaces: Float
+    numberOfLabels: Float
   }
 
   # misc definitions
   type Attribute {
     name: String!
     confidence: Float!
-    value: Boolean
-  }
-
-  input AttributeInput {
-    name: String!
-    confidence: Float!
-    value: Boolean
+    value: String
   }
 
   type BoundingBox {
@@ -152,11 +154,14 @@ const generateTypeDefs = gql => gql`
     top: Float!
   }
 
-  input BoundingBoxInput {
-    height: Float!
-    width: Float!
-    left: Float!
-    top: Float!
+  # type KeyValue {
+  #   key: String!
+  #   value: String
+  # }
+
+  enum Orientation {
+    LANDSCAPE
+    PORTRAIT  
   }
 `;
 
