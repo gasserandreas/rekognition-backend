@@ -68,7 +68,6 @@ export const refreshToken = async (parent, args, context, info) => {
 
   // re-create token
   const newToken = createToken(userId);
-  console.log(newToken);
 
   // get user
   const user = await context.models.User.getById(userId);
@@ -81,17 +80,4 @@ export const refreshToken = async (parent, args, context, info) => {
     token: newToken,
     user,
   };
-};
-
-export const emailInUse = async (parent, args, context, info) => {
-  const { input } = args;
-  const { email, password } = input;
-
-  // get user
-  const user = await context.models.User.getByEmail(email);
-
-  /**
-   * if no user: return true, else false
-   */
-  return !!user;
 };

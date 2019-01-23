@@ -10,6 +10,7 @@ import {
   autorotateImage,
   resizeImage,
   getImageMeta,
+  convertBase64ToImageBuffer,
 } from './util';
 
 import { Orientation } from '../TypeDefs';
@@ -48,8 +49,8 @@ class Image extends RootModel {
 
   async createImage(input) {
     const newImage = {
-      ...input,
       id: uuid.v4(),
+      ...input,
       user_id: this.loggedInUserId(),
       created: new Date().toISOString(),
     }
@@ -68,6 +69,15 @@ class Image extends RootModel {
     }
   }
 
+  async convertToImage(base64String) {
+    // create basic buffer from string
+    const fileStr = base64String.replace(/^data:image\/\w+;base64,/, '');
+    const file = Buffer.from(fileStr, 'base64');
+
+    // create image buffer
+    return convertBase64ToImageBuffer(file);
+  }
+
   getS3ImagePath(filename) {
     return `${this.loggedInUserId()}/${filename}`;
   }
@@ -78,12 +88,9 @@ class Image extends RootModel {
     // upload file to s3
     const bucketName = this.AwsClient.BucketsNames.IMAGE;
     const s3ImagePath = this.getS3ImagePath(name);
-
-    // create buffer from received buffer content
-    const buffer = new Buffer(file);
     
     // upload image
-    return this.AwsClient.uploadImageToS3(bucketName, s3ImagePath, type, buffer)
+    return this.AwsClient.uploadImageToS3(bucketName, s3ImagePath, type, file)
       .then(() => {
         return {
           uploadPath: s3ImagePath,
@@ -99,12 +106,9 @@ class Image extends RootModel {
     const bucketName = this.AwsClient.BucketsNames.THUMB;
     const s3ImagePath = this.getS3ImagePath(name);
 
-    // create buffer from received buffer content
-    const buffer = new Buffer(file);
-
     try {
       // rotate image
-      const rotatedImage = await autorotateImage(buffer);
+      const rotatedImage = await autorotateImage(file);
 
       // resize image
       const resizedImage = await resizeImage(rotatedImage, name);
@@ -184,7 +188,7 @@ class Image extends RootModel {
   async detectImageMeta(file) {
     // create buffer from received buffer content
     const buffer = new Buffer(file);
-
+    
     try {
       const meta = await getImageMeta(buffer);
 

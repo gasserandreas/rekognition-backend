@@ -2,13 +2,14 @@ import generateTypeDefs from './typeDefs';
 import dotenv from 'dotenv';
 
 import UserModel from './models/User';
-import ImageModel from './models/Image';
+import ImageModel from './models/Image/image';
 
 import resolvers from './resolvers';
 
-import DynamoFactory, { generateDynamoTables } from './dynamo';
+import DynamoFactory from './dynamo';
 import AwsFactory from './aws';
 
+import { splitJsonStringToObject } from './util';
 import { getAuthorizationUserId } from './auth';
 
 // load .env vars
@@ -18,13 +19,15 @@ dotenv.config();
 const {
   NODE_ENV,
   DYNAMODB_TABLE_NAMES,
+  S3_BUCKET_NAMES,
   AWS_DEFAULT_REGION,
   AWS_DEFAULT_ACCESS_KEY_ID,
   AWS_DEFAULT_SECRET_ACCESS_KEY,
 } = process.env;
 
 // translate vars into dynamo table config
-const dynamoTables = generateDynamoTables(DYNAMODB_TABLE_NAMES);
+const dynamoTables = splitJsonStringToObject(DYNAMODB_TABLE_NAMES);
+const buckets = splitJsonStringToObject(S3_BUCKET_NAMES);
 
 const dynamoConfig = {
   ...NODE_ENV === 'local' ? {
@@ -32,13 +35,6 @@ const dynamoConfig = {
     endpoint: 'http://localhost:4569',
   } : {},
 };
-
-// configure resolvers and graphql server
-// const resolvers = {
-//   Query: QueryResolver,
-//   Mutation: MutationResolver,
-//   Image: ImageResolver,
-// };
 
 export const generateServer = (Server, gql, local = false) => new Server({
   typeDefs: generateTypeDefs(gql),
@@ -63,7 +59,7 @@ export const generateServer = (Server, gql, local = false) => new Server({
     // initialize data access
     const DynamoClient = new DynamoFactory(dynamoTables, dynamoConfig)
 
-    // initialize AWS access
+    // // initialize AWS access
     let AwsClient;
     if (local) {
       AwsClient = new AwsFactory({
@@ -73,9 +69,10 @@ export const generateServer = (Server, gql, local = false) => new Server({
           secretAccessKey: AWS_DEFAULT_SECRET_ACCESS_KEY,
           region: AWS_DEFAULT_REGION,
         },
+        buckets,
       });
     } else {
-      AwsClient = new AwsFactory();
+      AwsClient = new AwsFactory({ buckets });
     }
     
     const models = {

@@ -1,3 +1,4 @@
+// import { gql } from 'apollo-server';
 
 const generateTypeDefs = gql => gql`
   type Query {
@@ -5,16 +6,18 @@ const generateTypeDefs = gql => gql`
     getUserInfo(user_id: ID!): User
     getImage(image_id: ID!): Image
     listImage(limit: Int, nextToken: String): ImageConnection!
+    emailInUse(input: EmailInUseInput!): Boolean
   }
 
   type Mutation {
-    empty: String
+    empty(input: String!): String!
     signUpUser(input: SignUpUserInput!): UserAuthPayload
     loginUser(input: LoginUserInput!): UserAuthPayload
     refreshToken(input: TokenRefreshInput!): UserAuthPayload
-    emailInUse(input: EmailInUseInput!): Boolean
     addImage(input: AddImageInput!): AddImagePayload
+    updateUser(input: UpdateUserInput!): UserPayload
   }
+
 
   # mutation payloads
   type UserAuthPayload {
@@ -36,6 +39,16 @@ const generateTypeDefs = gql => gql`
     firstname: String!
     lastname: String!
     email: String!
+  }
+
+  type UserPayload {
+    user: User!
+  }
+
+  input UpdateUserInput {
+    firstname: String!
+    lastname: String!
+    # email: String!
   }
 
   # Auth definitions
@@ -77,7 +90,9 @@ const generateTypeDefs = gql => gql`
   }
 
   input AddImageInput {
-    file: Upload!
+    id: ID
+    # file: Upload!
+    file: String!
     name: String!
     type: String!
     analyse: Boolean
@@ -101,7 +116,7 @@ const generateTypeDefs = gql => gql`
     low: Float!
   }
 
-  # label definitions
+  # # label definitions
   type LabelPayload {
     items: [Label]!
   }
@@ -139,10 +154,10 @@ const generateTypeDefs = gql => gql`
     top: Float!
   }
 
-  type KeyValue {
-    key: String!
-    value: String
-  }
+  # type KeyValue {
+  #   key: String!
+  #   value: String
+  # }
 
   enum Orientation {
     LANDSCAPE

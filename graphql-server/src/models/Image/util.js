@@ -54,7 +54,6 @@ export const autorotateImage = (data) => {
             console.log('Orientation was: ' + orientation);
             resolve(buffer);
         } else if (error.code === 'no_orientation' || error.code === 'correct_orientation') {
-            console.log('no rotation needed');
             resolve(buffer);
         } else {
             console.log(error);
@@ -65,6 +64,14 @@ export const autorotateImage = (data) => {
     });
   });
 };
+
+export const convertBase64ToImageBuffer = async (file) => {
+  const image = sharp(file);
+
+  return image
+    .withMetadata()
+    .toBuffer();
+}
 
 export const resizeImage = (image, filename) => {
   const MAX_WIDTH  = 1000;

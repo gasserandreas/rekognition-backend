@@ -2,8 +2,10 @@ import { handleAuth } from '../../auth';
 
 export const addImage = async (parent, args, context, info) => {
   handleAuth(context);
+  const { file: rawFileStr, id, name, type, analyse } = await args.input;
 
-  const { file, name, type, analyse } = await args.input;
+  // convert to image file
+  const file = await context.models.Image.convertToImage(rawFileStr);
 
   // parallel upload
   const uploadResult = await Promise.all([
@@ -34,13 +36,13 @@ export const addImage = async (parent, args, context, info) => {
 
   // create and store image
   const imageInput = {
+    id,
     name,
     type,
     faces,
     labels,
     meta,
   };
-  console.log(imageInput);
   const image = await context.models.Image.createImage(imageInput);
 
   return {
